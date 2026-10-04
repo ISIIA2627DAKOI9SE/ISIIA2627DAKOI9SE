@@ -1,0 +1,21 @@
+@startuml
+
+!include .\IdentityUser.puml
+!include .\ApplicationUser.puml
+!include .\Cliente.puml
+!include .\MetodoPago.puml
+!include .\TipoImpresora.puml
+!include .\TiempoReserva.puml
+!include .\Impresora3D.puml
+!include .\LineaReserva.puml
+!include .\ReservaImpresora.puml
+
+' Enumeraciones separadas en la parte superior
+MetodoPago -[hidden]- TipoImpresora
+TipoImpresora -[hidden]- TiempoReserva
+
+MetodoPago -[hidden]down- ApplicationUser
+TipoImpresora -[hidden]down- Cliente
+TiempoReserva -[hidden]down- ReservaImpresora
+
+@enduml
