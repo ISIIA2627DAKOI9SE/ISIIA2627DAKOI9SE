@@ -19,7 +19,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
      public DbSet<Cliente> Clientes { get; set; }
      
-
+    public DbSet<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
 
 
 
