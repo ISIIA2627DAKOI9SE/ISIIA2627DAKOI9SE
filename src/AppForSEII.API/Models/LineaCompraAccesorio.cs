@@ -27,4 +27,6 @@ public class LineaCompraAccesorio
 
     public int CompraAccesorioId { get; set; }
     public CompraAccesorio CompraAccesorio { get; set; }
+    public int AccesorioId { get; set; }
+    public Accesorio Accesorio { get; set; }
 }
