@@ -1,0 +1,12 @@
+@startuml
+
+!include .\ApplicationUser.puml
+!include .\Cliente.puml
+!include .\MetodoPago.puml
+!include .\TipoImpresora.puml
+!include .\TiempoReserva.puml
+!include .\Impresora3D.puml
+!include .\LineaReserva.puml
+!include .\ReservaImpresora.puml
+
+@enduml
