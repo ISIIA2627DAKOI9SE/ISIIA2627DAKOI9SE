@@ -9,7 +9,7 @@ public class CompraAccesorio
     {
     }
 
-    public CompraAccesorio(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, decimal precioTotal)
+    public CompraAccesorio(int id, DateTime fechaCompra, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, decimal precioTotal, MetodoPago metodoPago)
     {
         Id = id;
         FechaCompra = fechaCompra;
@@ -18,6 +18,7 @@ public class CompraAccesorio
         DireccionEnvio = direccionEnvio;
         NumeroTelefono = numeroTelefono;
         PrecioTotal = precioTotal;
+        MetodoPago = metodoPago;
     }
     [Key]
     public int Id { get; set; }
@@ -32,7 +33,7 @@ public class CompraAccesorio
     public string NumeroTelefono { get; set; }
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
-
+    public MetodoPago MetodoPago { get; set; }
     public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
     public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
