@@ -1,0 +1,9 @@
+@startuml
+
+enum TipoImpresora {
+    Filamento
+    Resina
+    Polimero
+}
+
+@enduml
