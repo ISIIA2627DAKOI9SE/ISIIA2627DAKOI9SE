@@ -12,11 +12,6 @@ class CompraAccesorio {
     + ClienteId : string <<get>> <<set>>
     + MetodoPago : MetodoPago <<get>> <<set>>
 }
-enum MetodoPago {
-    TarjetaCredito,
-    PayPal,
-    Bizum,
-}
 
 CompraAccesorio o-- "0..* LineaCompraAccesorios" "LineaCompraAccesorio"
 CompraAccesorio -- "Cliente" Cliente
