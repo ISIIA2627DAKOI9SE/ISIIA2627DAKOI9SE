@@ -40,5 +40,5 @@ public class Accesorio
     [Precision(10, 2)]
     public decimal Precio { get; set; }
 
-    public IList<LineaCompraAccesorio> LineasCompra { get; set; }
+    public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
 }
