@@ -1,0 +1,14 @@
+@startuml
+
+class Impresora3D {
+    + Impresora3D()
+    + Id : int <<get>> <<set>>
+    + Nombre : string <<get>> <<set>>
+    + Modelo : string <<get>> <<set>>
+    + Tipo : TipoImpresora <<get>> <<set>>
+    + Descripcion : string <<get>> <<set>>
+    + PrecioKilovatioHora : decimal <<get>> <<set>>
+    + PrecioReserva : decimal <<get>> <<set>>
+}
+
+@enduml
