@@ -35,4 +35,10 @@ public class LineaCompraModelo
 
     [ForeignKey(nameof(CompraModelo3DId))]
     public CompraModelo3D CompraModelo3D { get; set; } = null!;
+
+    [Required]
+    public int Modelo3DId { get; set; }
+    [ForeignKey(nameof(Modelo3DId))]
+    public Modelo3D Modelo3D { get; set; } = null!;
+
 }
