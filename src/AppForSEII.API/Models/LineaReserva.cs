@@ -7,5 +7,6 @@ public class LineaReserva
     public TiempoReserva TiempoReserva { get; set; }
 
     public decimal PrecioSubtotal { get; set; }
+    public Impresora3D Impresora3D { get; set; }
     
 }
