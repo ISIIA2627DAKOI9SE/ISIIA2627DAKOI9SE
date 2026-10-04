@@ -9,11 +9,12 @@ public class Accesorio
     {
     }
 
-    public Accesorio(int id, string nombre, string compatibilidad,
+    public Accesorio(int id, string nombre, CategoriaAccesorio categoria, string compatibilidad,
         int cantidadDisponible, decimal precio)
     {
         Id = id;
         Nombre = nombre;
+        CategoriaAccesorio = categoria;
         Compatibilidad = compatibilidad;
         CantidadDisponible = cantidadDisponible;
         Precio = precio;
@@ -25,6 +26,7 @@ public class Accesorio
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100)]
     public string Nombre { get; set; }
+    public CategoriaAccesorio CategoriaAccesorio { get; set; }
 
 
     [Required(ErrorMessage = "La compatibilidad es obligatoria")]
@@ -37,4 +39,6 @@ public class Accesorio
     [Range(0.01, 100000, ErrorMessage = "El precio debe ser mayor que 0")]
     [Precision(10, 2)]
     public decimal Precio { get; set; }
+
+    public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
 }

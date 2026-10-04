@@ -24,4 +24,9 @@ public class LineaCompraAccesorio
     public decimal PrecioUnidad { get; set; }
     [Precision(10, 2)]
     public decimal Subtotal { get; set; }
+
+    public int CompraAccesorioId { get; set; }
+    public CompraAccesorio CompraAccesorio { get; set; }
+    public int AccesorioId { get; set; }
+    public Accesorio Accesorio { get; set; }
 }
