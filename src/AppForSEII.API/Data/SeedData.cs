@@ -71,7 +71,15 @@ namespace AppForSEII.API.Data {
 
         }
 
+        public static void SeedPieza3D(ApplicationDbContext dbcontext, ApplicationUser user) {
 
+            if (dbcontext.Piezas3D.FirstOrDefault(p => p.Id == 1) == null) {
+                var pieza = new Pieza3D(1,"pieza1",100, CategoriaPieza.Repuestos,new HashSet<Material>());
+                dbcontext.Piezas3D.Add(pieza);
+            }
+            dbcontext.SaveChanges();
+
+        }
 
 
 
