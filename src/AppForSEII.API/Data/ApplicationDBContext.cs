@@ -27,6 +27,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<LineaCompraModelo> LineasCompraModelo { get; set; }
      
+     public DbSet<CompraModelo3D> ComprasModelo3D { get; set; }
 
 
 
