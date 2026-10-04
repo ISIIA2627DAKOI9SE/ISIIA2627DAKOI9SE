@@ -35,4 +35,5 @@ public class CompraAccesorio
 
     public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
+    public IList<LineaCompraAccesorio> LineasCompra { get; set; }
 }
