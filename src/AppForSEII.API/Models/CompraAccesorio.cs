@@ -29,7 +29,7 @@ public class CompraAccesorio
     public string ApellidosCliente { get; set; }
     [Required(ErrorMessage = "La dirección de envío es obligatoria")]
     public string DireccionEnvio { get; set; }
-    [Required(ErrorMessage = "El número de teléfono es obligatorio")]
+    [Required(ErrorMessage = "El número de telefono es obligatorio")]
     public string NumeroTelefono { get; set; }
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
