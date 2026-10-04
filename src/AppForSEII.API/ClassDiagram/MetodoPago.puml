@@ -1,0 +1,9 @@
+@startuml
+
+enum MetodoPago {
+    TarjetaCredito
+    PayPal
+    Bizum
+}
+
+@enduml
