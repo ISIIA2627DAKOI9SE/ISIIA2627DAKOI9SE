@@ -32,6 +32,6 @@ public class Modelo3D
 
     [Precision(10, 2)]
     public decimal Precio { get; set; }
-    public ICollection<LineaCompraModelo> LineasCompraModelo { get; set; }
-    = new List<LineaCompraModelo>();
+    public IList<LicenciaModelo3D> LicenciasModelo3D { get; set; } = new List<LicenciaModelo3D>();
+    
 }
