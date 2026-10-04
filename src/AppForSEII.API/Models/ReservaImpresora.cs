@@ -15,4 +15,6 @@ public class ReservaImpresora
     public decimal PrecioTotal { get; set; }
 
     public MetodoPago MetodoPago { get; set; }
+
+    public IList<LineaReserva> LineasReserva { get; set; } = new List<LineaReserva>();
 }
