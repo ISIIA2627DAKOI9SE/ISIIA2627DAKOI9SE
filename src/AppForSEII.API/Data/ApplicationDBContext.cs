@@ -28,13 +28,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
      
      public DbSet<Cliente> Clientes { get; set; }
+
+     
+     public DbSet<Impresora3D> Impresora3Ds { get; set; }
+
+    public DbSet<LineaReserva> LineasReserva { get; set; }
+
+
     public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
     public DbSet<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
     public DbSet<Accesorio> Accesorios { get; set; }
 
-     public DbSet<Impresora3D> Impresora3Ds { get; set; }
+ 
 
-    public DbSet<LineaReserva> LineasReserva { get; set; }
+  
+
 
     public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
 

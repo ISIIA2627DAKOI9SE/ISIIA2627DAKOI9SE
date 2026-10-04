@@ -47,6 +47,21 @@ namespace AppForSEII.API.Data
                 );
             }
 
+            // UC Reservar impresoras 3D
+            try
+            {
+                SeedImpresoras3D(dbContext);
+                SeedReservasImpresora(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(
+                    ex,
+                    "An error occurred seeding reservation data in the Database."
+                );
+            }
+
+            // UC Comprar modelos 3D
             try
             {
                 SeedComprarModelos3D(dbContext);
@@ -60,7 +75,6 @@ namespace AppForSEII.API.Data
             }
         }
 
-
         public static void SeedRoles(
             RoleManager<IdentityRole> roleManager,
             List<string> roles)
@@ -70,6 +84,7 @@ namespace AppForSEII.API.Data
                 if (!roleManager.RoleExistsAsync(roleName).Result)
                 {
                     IdentityRole role = new IdentityRole();
+
                     role.Name = roleName;
                     role.NormalizedName = roleName;
 
@@ -78,7 +93,6 @@ namespace AppForSEII.API.Data
                 }
             }
         }
-
 
         public static void SeedUsers(
             UserManager<ApplicationUser> userManager,
@@ -112,7 +126,6 @@ namespace AppForSEII.API.Data
                 }
             }
 
-
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
                 ApplicationUser user =
@@ -142,6 +155,89 @@ namespace AppForSEII.API.Data
             }
         }
 
+        // ==========================================================
+        // UC RESERVAR IMPRESORAS 3D
+        // ==========================================================
+
+        public static void SeedImpresoras3D(
+            ApplicationDbContext dbContext)
+        {
+            if (!dbContext.Impresora3Ds.Any())
+            {
+                Impresora3D impresora1 = new Impresora3D
+                {
+                    Nombre = "Prusa MK4",
+                    Modelo = "MK4",
+                    Tipo = TipoImpresora.Filamento,
+                    Descripcion =
+                        "Impresora 3D de filamento para reservas",
+                    PrecioKilovatioHora = 0.25m,
+                    PrecioReserva = 8.00m
+                };
+
+                Impresora3D impresora2 = new Impresora3D
+                {
+                    Nombre = "Elegoo Mars",
+                    Modelo = "Mars 4",
+                    Tipo = TipoImpresora.Resina,
+                    Descripcion =
+                        "Impresora 3D de resina para piezas de alta precisión",
+                    PrecioKilovatioHora = 0.30m,
+                    PrecioReserva = 10.00m
+                };
+
+                dbContext.Impresora3Ds.AddRange(
+                    impresora1,
+                    impresora2
+                );
+
+                dbContext.SaveChanges();
+            }
+        }
+
+        public static void SeedReservasImpresora(
+            ApplicationDbContext dbContext)
+        {
+            if (!dbContext.ReservaImpresoras.Any())
+            {
+                Impresora3D? impresora =
+                    dbContext.Impresora3Ds.FirstOrDefault();
+
+                if (impresora != null)
+                {
+                    LineaReserva lineaReserva = new LineaReserva
+                    {
+                        TiempoReserva = TiempoReserva.DosHoras,
+                        PrecioSubtotal = 16.00m,
+                        Impresora3D = impresora
+                    };
+
+                    ReservaImpresora reserva =
+                        new ReservaImpresora
+                        {
+                            FechaReserva = DateTime.Now,
+                            NombreCliente = "Peter",
+                            ApellidosCliente = "Jackson",
+                            DireccionFacturacion =
+                                "Calle Ejemplo 1, Albacete",
+                            PrecioTotal = 16.00m,
+                            MetodoPago = MetodoPago.Bizum,
+                            LineasReserva =
+                                new List<LineaReserva>
+                                {
+                                    lineaReserva
+                                }
+                        };
+
+                    dbContext.ReservaImpresoras.Add(reserva);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        // ==========================================================
+        // UC COMPRAR MODELOS 3D
+        // ==========================================================
 
         public static void SeedComprarModelos3D(
             ApplicationDbContext dbContext)
@@ -153,9 +249,6 @@ namespace AppForSEII.API.Data
             {
                 return;
             }
-
-
-            
 
             LicenciaModelo3D licenciaPersonal =
                 new LicenciaModelo3D(
@@ -177,8 +270,6 @@ namespace AppForSEII.API.Data
                     "Licencia Profesional",
                     new DateTime(2029, 6, 30)
                 );
-
-
 
             Modelo3D dragonMedieval =
                 new Modelo3D(
@@ -207,7 +298,6 @@ namespace AppForSEII.API.Data
                     4.99m
                 );
 
-
             // RELACIÓN MODELO 3D - LICENCIAS
 
             dragonMedieval.LicenciasModelo3D.Add(
@@ -226,8 +316,6 @@ namespace AppForSEII.API.Data
                 licenciaProfesional
             );
 
-
-
             LineaCompraModelo linea1 =
                 new LineaCompraModelo(
                     0,
@@ -238,7 +326,6 @@ namespace AppForSEII.API.Data
 
             linea1.Modelo3D = dragonMedieval;
 
-
             LineaCompraModelo linea2 =
                 new LineaCompraModelo(
                     0,
@@ -248,7 +335,6 @@ namespace AppForSEII.API.Data
                 );
 
             linea2.Modelo3D = torreMedieval;
-
 
             LineaCompraModelo linea3 =
                 new LineaCompraModelo(
@@ -281,7 +367,6 @@ namespace AppForSEII.API.Data
                 linea2
             );
 
-
             CompraModelo3D compra2 =
                 new CompraModelo3D(
                     0,
@@ -299,7 +384,6 @@ namespace AppForSEII.API.Data
                 linea3
             );
 
-
             dbContext.ComprasModelo3Ds.AddRange(
                 compra1,
                 compra2
@@ -309,5 +393,3 @@ namespace AppForSEII.API.Data
         }
     }
 }
-
-
