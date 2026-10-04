@@ -42,4 +42,5 @@ public class CompraModelo3D
 
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
+    public IList<LineaCompraModelo> LineasCompraModelo { get; set; } = new List<LineaCompraModelo>();
 }

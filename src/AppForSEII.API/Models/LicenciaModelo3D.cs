@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppForSEII.API.Models;
 
@@ -23,4 +24,9 @@ public class LicenciaModelo3D
 
     [Required(ErrorMessage = "La fecha de expiración es obligatoria")]
     public DateTime FechaExpiracion { get; set; }
+    [Required]
+    public int Modelo3DId { get; set; }
+
+    [ForeignKey(nameof(Modelo3DId))]
+    public Modelo3D Modelo3D { get; set; } = null!;
 }
