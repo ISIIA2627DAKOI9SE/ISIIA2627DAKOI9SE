@@ -19,8 +19,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
      public DbSet<Cliente> Clientes { get; set; }
      
+     public DbSet<Impresora3D> Impresora3Ds { get; set; }
 
+    public DbSet<LineaReserva> LineasReserva { get; set; }
 
+    public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
 
 
 
