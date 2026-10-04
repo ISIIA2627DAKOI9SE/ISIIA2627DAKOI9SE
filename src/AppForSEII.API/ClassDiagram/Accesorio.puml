@@ -9,13 +9,5 @@ class Accesorio {
     + CantidadDisponible : int <<get>> <<set>>
     + Precio : decimal <<get>> <<set>>
 }
-enum CategoriaAccesorio {
-    Boquillas,
-    BasesImpresion,
-    Herramientas,
-    KitsLimpieza,
-    Repuestos,
-}
-
 Accesorio o-- "0..* LineaCompraAccesorios" "LineaCompraAccesorio"
 @enduml
