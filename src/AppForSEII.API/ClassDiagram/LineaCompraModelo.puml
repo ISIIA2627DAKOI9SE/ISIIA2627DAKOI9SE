@@ -1,0 +1,15 @@
+@startuml
+
+class LineaCompraModelo {
+    + LineaCompraModelo()
+    + LineaCompraModelo(id:int, cantidadLicencias:int, precioUnidad:decimal, subtotal:decimal)
+    + Id : int <<get>> <<set>>
+    + CantidadLicencias : int <<get>> <<set>>
+    + PrecioUnidad : decimal <<get>> <<set>>
+    + Subtotal : decimal <<get>> <<set>>
+    + Modelo3D : Modelo3D <<get>> <<set>>
+}
+
+LineaCompraModelo --> Modelo3D
+
+@enduml

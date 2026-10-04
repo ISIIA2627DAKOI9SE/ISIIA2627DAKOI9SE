@@ -36,7 +36,7 @@ public class Accesorio
     [Range(0, int.MaxValue, ErrorMessage = "La cantidad disponible no puede ser negativa")]
     public int CantidadDisponible { get; set; }
 
-    [Range(0.01, 100000, ErrorMessage = "El precio debe ser mayor que  0")]
+    [Range(0.01, 100000, ErrorMessage = "El precio debe ser mayor que 0")]
     [Precision(10, 2)]
     public decimal Precio { get; set; } 
 

@@ -17,8 +17,20 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-     public DbSet<Cliente> Clientes { get; set; }
+
+
+    public DbSet<Modelo3D> Modelo3Ds { get; set; }
+
     public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
+    public DbSet<LicenciaModelo3D> LicenciasModelo3Ds { get; set; }
+
+    public DbSet<LineaCompraModelo> LineasCompraModelos { get; set; }
+     
+     public DbSet<CompraModelo3D> ComprasModelo3Ds { get; set; }
+
+     
+     public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<CompraAccesorio> CompraAccesorios { get; set; }
     public DbSet<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
     public DbSet<Accesorio> Accesorios { get; set; }
 
@@ -27,7 +39,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<LineaReserva> LineasReserva { get; set; }
 
     public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
-
-
 
 }
