@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppForSEII.API.Models;
 
@@ -28,4 +29,13 @@ public class LineaCompraModelo
 
     [Precision(10, 2)]
     public decimal Subtotal { get; set; }
+
+    [Required]
+    public int CompraModelo3DId { get; set; }
+
+    [ForeignKey(nameof(CompraModelo3DId))]
+    public CompraModelo3D CompraModelo3D { get; set; } = null!;
+
+    public Modelo3D Modelo3D { get; set; } = null!;
+
 }
