@@ -17,13 +17,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Modelo3D> Modelo3Ds { get; set; }
+
      public DbSet<Cliente> Clientes { get; set; }
     public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
     public DbSet<LicenciaModelo3D> LicenciasModelo3D { get; set; }
+
     public DbSet<LineaCompraModelo> LineasCompraModelo { get; set; }
      
-
-
 
 
 
