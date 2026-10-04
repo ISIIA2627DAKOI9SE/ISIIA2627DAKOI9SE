@@ -1,0 +1,19 @@
+@startuml
+class Pieza3D {
+    + Pieza3D()
+    + Pieza3D(id:int, nombre:string, peso:decimal, categoria:CategoriaPieza, materialesValidos:Hashset<Material>)
+    + Id : int <<get>> <<set>>
+    + Nombre : string <<get>> <<set>>
+    + Peso : decimal <<get>> <<set>>
+    + Categoria: CategoriaPieza <<get>> <<set>>
+}
+enum CategoriaPieza
+    {
+    Decoracion,
+    MiniaturasYMaquetas,
+    Repuestos,
+    HerramientasYAccesorios
+    }
+
+Pieza3D o-- "1..* materialesValidos" "Material"
+@enduml

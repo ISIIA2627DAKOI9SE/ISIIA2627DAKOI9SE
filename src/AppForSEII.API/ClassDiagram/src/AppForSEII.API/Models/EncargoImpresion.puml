@@ -1,0 +1,21 @@
+@startuml
+class EncargoImpresion {
+    + EncargoImpresion()
+    + EncargoImpresion(id:int, fechaEncargo:DateTime, nombreCliente:string, apellidosCliente:string, direccionEnvio:string, numeroTelefono:string, descripcion:string, metodoPago:MetodoPago, lineasEncargo:IList<LineaEncargo>)
+    + Id : int <<get>> <<set>>
+    + FechaEncargo : datetime <<get>> <<set>>
+    + NombreCliente : string <<get>> <<set>>
+    + ApellidosCliente : string <<get>> <<set>>
+    + DireccionEnvio: string <<get>> <<set>>
+    + NumeroTelefono : string <<get>> <<set>>
+    + Descripcion : string <<get>> <<set>>
+    + MetodoPago : MetodoPago <<get>> <<set>>
+}
+enum MetodoPago
+{
+    TarjetaCredito,
+    PayPal,
+    Bizum
+}
+EncargoImpresion o-- "0..* lineasEncargo" "LineaEncargo"
+@enduml
