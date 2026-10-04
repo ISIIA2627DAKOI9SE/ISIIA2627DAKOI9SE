@@ -25,6 +25,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
     public DbSet<LicenciaModelo3D> LicenciasModelo3D { get; set; }
 
+    public DbSet<LineaCompraModelo> LineasCompraModelo { get; set; }
+     
+
 
 
 }
