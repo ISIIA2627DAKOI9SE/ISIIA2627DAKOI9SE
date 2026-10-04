@@ -1,0 +1,14 @@
+@startuml
+class LineaEncargo {
+    + LineaEncargo()
+    + LineaEncargo(id:int, cantidad:int, precioUnidad:decimal, subtotal:decimal, pieza:Pieza3D, material:Material)
+    + Id : int <<get>> <<set>>
+    + Cantidad : int <<get>> <<set>>
+    + PrecioUnidad : decimal <<get>> <<set>>
+    + Subtotal : decimal <<get>> <<set>>
+    + Pieza : Pieza3D <<get>> <<set>>
+    + Material : Material <<get>> <<set>>
+}
+LineaEncargo o-- "0..1 material" "Material"
+LineaEncargo o-- "0..1 pieza" "Pieza3D"
+@enduml
