@@ -29,7 +29,7 @@ public class Accesorio
 
     [Required(ErrorMessage = "La compatibilidad es obligatoria")]
     [StringLength(200)]
-    public string Compatibilidad { get; set; } = string.Empty;
+    public string Compatibilidad { get; set; }
 
     [Range(0, int.MaxValue, ErrorMessage = "La cantidad disponible no puede ser negativa")]
     public int CantidadDisponible { get; set; }
