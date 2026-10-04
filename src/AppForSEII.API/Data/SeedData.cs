@@ -47,6 +47,20 @@ namespace AppForSEII.API.Data
                 );
             }
 
+            // Caso de uso: Reservar impresoras 3D
+            try
+            {
+                SeedImpresoras3D(dbContext);
+                SeedReservasImpresora(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(
+                    ex,
+                    "An error occurred seeding reservation data in the Database."
+                );
+            }
+
             // Caso de uso: Comprar accesorios para impresión 3D
             try
             {
@@ -139,8 +153,6 @@ namespace AppForSEII.API.Data
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
-                // Peter es un Cliente (hereda de ApplicationUser): necesario para
-                // asociarle compras de accesorios (Cliente 1 -- realiza -- 0..* CompraAccesorio)
                 Cliente user =
                     new Cliente(
                         "3",
@@ -250,13 +262,11 @@ namespace AppForSEII.API.Data
         }
 
         // ==========================================================
-        // UC COMPRAR MODELOS 3D
+        // UC COMPRAR ACCESORIOS PARA IMPRESIÓN 3D
         // ==========================================================
-
 
         public static void SeedAccesorios(ApplicationDbContext dbContext)
         {
-            // Si ya hay accesorios, no se vuelven a insertar
             if (dbContext.Accesorios.Any())
             {
                 return;
@@ -324,7 +334,7 @@ namespace AppForSEII.API.Data
                     Nombre = "Ventilador de Capa 4010",
                     CategoriaAccesorio = CategoriaAccesorio.Repuestos,
                     Compatibilidad = "Creality Ender 3 V2",
-                    CantidadDisponible = 0, // sin stock: sirve para probar los flujos alternativos 2.1 / 3.1 / 7.3
+                    CantidadDisponible = 0,
                     Precio = 3.80m
                 }
             );
@@ -339,9 +349,10 @@ namespace AppForSEII.API.Data
                 return;
             }
 
-            // El cliente se crea en SeedUsers
             var cliente =
-                dbContext.Clientes.FirstOrDefault(c => c.Email == "peter@uclm.es");
+                dbContext.Clientes.FirstOrDefault(
+                    c => c.Email == "peter@uclm.es"
+                );
 
             if (cliente == null)
             {
@@ -349,10 +360,14 @@ namespace AppForSEII.API.Data
             }
 
             var boquilla =
-                dbContext.Accesorios.First(a => a.Nombre == "Boquilla de Latón 0.4mm");
+                dbContext.Accesorios.First(
+                    a => a.Nombre == "Boquilla de Latón 0.4mm"
+                );
 
             var basePei =
-                dbContext.Accesorios.First(a => a.Nombre == "Base de Impresión PEI Magnética");
+                dbContext.Accesorios.First(
+                    a => a.Nombre == "Base de Impresión PEI Magnética"
+                );
 
             var compra = new CompraAccesorio
             {
@@ -363,28 +378,29 @@ namespace AppForSEII.API.Data
                 NumeroTelefono = "600123456",
                 MetodoPago = MetodoPago.TarjetaCredito,
                 ClienteId = cliente.Id,
-                LineaCompraAccesorios = new List<LineaCompraAccesorio>
-                {
-                    new LineaCompraAccesorio
+                LineaCompraAccesorios =
+                    new List<LineaCompraAccesorio>
                     {
-                        AccesorioId = boquilla.Id,
-                        Cantidad = 2,
-                        PrecioUnidad = boquilla.Precio,
-                        Subtotal = 2 * boquilla.Precio
-                    },
-                    new LineaCompraAccesorio
-                    {
-                        AccesorioId = basePei.Id,
-                        Cantidad = 1,
-                        PrecioUnidad = basePei.Precio,
-                        Subtotal = basePei.Precio
+                        new LineaCompraAccesorio
+                        {
+                            AccesorioId = boquilla.Id,
+                            Cantidad = 2,
+                            PrecioUnidad = boquilla.Precio,
+                            Subtotal = 2 * boquilla.Precio
+                        },
+                        new LineaCompraAccesorio
+                        {
+                            AccesorioId = basePei.Id,
+                            Cantidad = 1,
+                            PrecioUnidad = basePei.Precio,
+                            Subtotal = basePei.Precio
+                        }
                     }
-                }
             };
 
-            compra.PrecioTotal = compra.LineaCompraAccesorios.Sum(l => l.Subtotal);
+            compra.PrecioTotal =
+                compra.LineaCompraAccesorios.Sum(l => l.Subtotal);
 
-            // Descontar el stock vendido
             boquilla.CantidadDisponible -= 2;
             basePei.CantidadDisponible -= 1;
 
@@ -392,7 +408,9 @@ namespace AppForSEII.API.Data
             dbContext.SaveChanges();
         }
 
-
+        // ==========================================================
+        // UC COMPRAR MODELOS 3D
+        // ==========================================================
 
         public static void SeedComprarModelos3D(
             ApplicationDbContext dbContext)
@@ -404,7 +422,6 @@ namespace AppForSEII.API.Data
             {
                 return;
             }
-
 
             LicenciaModelo3D licenciaPersonal =
                 new LicenciaModelo3D(
@@ -454,8 +471,6 @@ namespace AppForSEII.API.Data
                     4.99m
                 );
 
-            // RELACIÓN MODELO 3D - LICENCIAS
-
             dragonMedieval.LicenciasModelo3D.Add(
                 licenciaPersonal
             );
@@ -471,7 +486,6 @@ namespace AppForSEII.API.Data
             soporteAuriculares.LicenciasModelo3D.Add(
                 licenciaProfesional
             );
-
 
             LineaCompraModelo linea1 =
                 new LineaCompraModelo(
