@@ -38,7 +38,7 @@ public class Accesorio
 
     [Range(0.01, 100000, ErrorMessage = "El precio debe ser mayor que 0")]
     [Precision(10, 2)]
-    public decimal Precio { get; set; }
+    public decimal Precio { get; set; } 
 
     public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
 }
