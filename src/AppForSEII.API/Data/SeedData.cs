@@ -1,79 +1,114 @@
-namespace AppForSEII.API.Data {
-    public class SeedData {
-        public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger) {
-            List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
+using AppForSEII.API.Models;
+using Microsoft.EntityFrameworkCore;
 
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            try {
-                SeedRoles(roleManager, rolesNames);
-            }
-            catch (Exception ex) {
-                logger.LogError(ex, "An error occurred seeding the roles in the Database.");
-            }
+namespace AppForSEII.API.Data;
 
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            try {
-                SeedUsers(userManager, rolesNames);
-            }
-            catch (Exception ex) {
-                logger.LogError(ex, "An error occurred seeding the Users in the Database.");
+public static class SeedData
+{
+    public static void Initialize(IServiceProvider serviceProvider)
+    {
+        using (var context = new ApplicationDbContext(
+            serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+        {
+            // Si ya hay accesorios, la base de datos ya fue inicializada
+            if (context.Accesorios.Any())
+            {
+                return;
             }
 
- 
-
-        }
-
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles) {
-
-            foreach (string roleName in roles) {
-                //it checks such role does not exist in the database 
-                if (!roleManager.RoleExistsAsync(roleName).Result) {
-                    IdentityRole role = new IdentityRole();
-                    role.Name = roleName;
-                    role.NormalizedName = roleName;
-                    IdentityResult roleResult = roleManager.CreateAsync(role).Result;
+            // 1. Accesorios
+            var accesorios = new List<Accesorio>
+            {
+                new Accesorio
+                {
+                    Nombre = "Boquilla de Latón 0.4mm",
+                    CategoriaAccesorio = CategoriaAccesorio.Boquillas,
+                    Compatibilidad = "Creality Ender 3, Prusa i3",
+                    CantidadDisponible = 150,
+                    Precio = 4.50m
+                },
+                new Accesorio
+                {
+                    Nombre = "Base de Impresión PEI Magnética",
+                    CategoriaAccesorio = CategoriaAccesorio.BasesImpresion,
+                    Compatibilidad = "Artillery Sidewinder X1, Artillery Genius",
+                    CantidadDisponible = 20,
+                    Precio = 25.99m
+                },
+                new Accesorio
+                {
+                    Nombre = "Espátula de Retirada de Piezas",
+                    CategoriaAccesorio = CategoriaAccesorio.Herramientas,
+                    Compatibilidad = "Universal",
+                    CantidadDisponible = 40,
+                    Precio = 5.90m
+                },
+                new Accesorio
+                {
+                    Nombre = "Kit de Limpieza de Boquillas y Agujas",
+                    CategoriaAccesorio = CategoriaAccesorio.KitsLimpieza,
+                    Compatibilidad = "Universal",
+                    CantidadDisponible = 45,
+                    Precio = 9.99m
+                },
+                new Accesorio
+                {
+                    Nombre = "Termistor NTC 100K",
+                    CategoriaAccesorio = CategoriaAccesorio.Repuestos,
+                    Compatibilidad = "E3D V6 Hotend",
+                    CantidadDisponible = 80,
+                    Precio = 6.20m
                 }
-            }
+            };
 
-        }
+            context.Accesorios.AddRange(accesorios);
+            context.SaveChanges();
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
-            //first, it checks the user does not already exist in the DB
-            if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
-                user.EmailConfirmed = true;
+            // 2. Cliente de prueba
+            var cliente = new Cliente
+            {
+                UserName = "cliente_prueba@i3dmodelos.com",
+                Email = "cliente_prueba@i3dmodelos.com",
+                Name = "Carlos",
+                Surname = "García",
+                DireccionFacturacion = "Calle Falsa 123, Ciudad"
+            };
 
-                var result = userManager.CreateAsync(user, "Password1234%");
-                result.Wait();
+            context.Clientes.Add(cliente);
+            context.SaveChanges();
 
-                if (result.IsCompletedSuccessfully) {
-                    //administrator role
-                    userManager.AddToRoleAsync(user, roles[0]).Wait();
+            // 3. Compra de accesorios con sus líneas
+            var compra = new CompraAccesorio
+            {
+                FechaCompra = DateTime.UtcNow,
+                NombreCliente = cliente.Name!,
+                ApellidosCliente = cliente.Surname!,
+                DireccionEnvio = "Calle Falsa 123, Ciudad",
+                NumeroTelefono = "600123456",
+                MetodoPago = MetodoPago.TarjetaCredito,
+                PrecioTotal = 30.49m,
+                ClienteId = cliente.Id, 
+                LineaCompraAccesorios = new List<LineaCompraAccesorio>
+                {
+                    new LineaCompraAccesorio
+                    {
+                        Cantidad = 1,
+                        PrecioUnidad = accesorios[0].Precio,
+                        Subtotal = accesorios[0].Precio,
+                        Accesorio = accesorios[0]
+                    },
+                    new LineaCompraAccesorio
+                    {
+                        Cantidad = 1,
+                        PrecioUnidad = accesorios[1].Precio,
+                        Subtotal = accesorios[1].Precio,
+                        Accesorio = accesorios[1]
+                    }
                 }
-            }
+            };
 
-
-            if (userManager.FindByNameAsync("peter@uclm.es").Result == null) {
-                //A customer class has been defined because it has different attributes (purchase, rental, etc.)
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
-                user.EmailConfirmed = true;
-
-                var result = userManager.CreateAsync(user, "OtherPass12$");
-
-                result.Wait();
-
-                if (result.IsCompletedSuccessfully) {
-                    //customer role
-                    userManager.AddToRoleAsync(user, roles[2]).Wait();
-
-                }
-            }
-
+            context.ComprasAccesorios.Add(compra);
+            context.SaveChanges();
         }
-
-
-
-
-
     }
 }
