@@ -1,0 +1,21 @@
+@startuml
+
+class CompraModelo3D {
+    + CompraModelo3D()
+    + CompraModelo3D(id:int, fechaCompra:DateTime, nombreCliente:string, apellidosCliente:string, correoElectronico:string, direccionFacturacion:string, descripcion:string, precioTotal:decimal, metodoPago:MetodoPago)
+    + Id : int <<get>> <<set>>
+    + FechaCompra : DateTime <<get>> <<set>>
+    + NombreCliente : string <<get>> <<set>>
+    + ApellidosCliente : string <<get>> <<set>>
+    + CorreoElectronico : string <<get>> <<set>>
+    + DireccionFacturacion : string <<get>> <<set>>
+    + Descripcion : string? <<get>> <<set>>
+    + PrecioTotal : decimal <<get>> <<set>>
+    + MetodoPago : MetodoPago <<get>> <<set>>
+    + LineasCompraModelo : IList<LineaCompraModelo> <<get>> <<set>>
+}
+
+CompraModelo3D --> MetodoPago
+CompraModelo3D --> LineaCompraModelo
+
+@enduml
