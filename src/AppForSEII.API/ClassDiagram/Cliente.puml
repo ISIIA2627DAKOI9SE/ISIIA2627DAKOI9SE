@@ -1,0 +1,12 @@
+@startuml
+
+class Cliente {
+    + DireccionFacturacion : string
+}
+
+ApplicationUser <|-- Cliente
+
+Cliente "1" -- "0..*" ReservaImpresora : realiza
+Cliente o-- "0..* CompraAccesorios" "CompraAccesorio"
+
+@enduml
