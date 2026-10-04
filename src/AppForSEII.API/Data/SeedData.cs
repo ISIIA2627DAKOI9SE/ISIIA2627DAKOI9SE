@@ -185,7 +185,7 @@ namespace AppForSEII.API.Data {
                     }
                 }
             };
-            compra.PrecioTotal = compra.LineaCompraAccesorios.Sum(l => l.Subtotal); // 2*4.50 + 25.99 = 34.99
+            compra.PrecioTotal = compra.LineaCompraAccesorios.Sum(l => l.Subtotal);
 
             // Descontar el stock vendido
             boquilla.CantidadDisponible -= 2;
