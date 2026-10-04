@@ -24,7 +24,7 @@ public class Accesorio
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100)]
-    public string Nombre { get; set; } = string.Empty;
+    public string Nombre { get; set; }
 
 
     [Required(ErrorMessage = "La compatibilidad es obligatoria")]
