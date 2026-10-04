@@ -13,5 +13,6 @@ class ReservaImpresora {
 }
 
 ReservaImpresora "1" *-- "1..*" LineaReserva : contiene
+Cliente "1" -- "0..*" ReservaImpresora : realiza
 
 @enduml

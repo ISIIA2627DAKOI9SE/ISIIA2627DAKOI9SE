@@ -6,6 +6,7 @@ class Cliente {
 
 ApplicationUser <|-- Cliente
 
-Cliente "1" -- "0..*" ReservaImpresora : realiza
+
+
 
 @enduml
