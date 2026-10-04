@@ -23,11 +23,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
      public DbSet<Cliente> Clientes { get; set; }
     public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
-    public DbSet<LicenciaModelo3D> LicenciasModelo3D { get; set; }
+    public DbSet<LicenciaModelo3D> LicenciasModelo3Ds { get; set; }
 
-    public DbSet<LineaCompraModelo> LineasCompraModelo { get; set; }
+    public DbSet<LineaCompraModelo> LineasCompraModelos { get; set; }
      
-     public DbSet<CompraModelo3D> ComprasModelo3D { get; set; }
+     public DbSet<CompraModelo3D> ComprasModelo3Ds { get; set; }
 
 
 
