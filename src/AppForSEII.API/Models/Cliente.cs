@@ -11,4 +11,6 @@ public class Cliente: ApplicationUser
     }
         public string DireccionFacturacion  { get; set; }
     
+    public IList<CompraAccesorio> Compras { get; set; }
+    
 }
