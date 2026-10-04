@@ -9,7 +9,7 @@ public class CompraModelo3D
     {
     }
 
-    public CompraModelo3D(int id,DateTime fechaCompra,string nombreCliente,string apellidosCliente,string correoElectronico,string direccionFacturacion,string descripcion,decimal precioTotal)
+    public CompraModelo3D(int id,DateTime fechaCompra,string nombreCliente,string apellidosCliente,string correoElectronico,string direccionFacturacion,string descripcion,decimal precioTotal, MetodoPago metodoPago)
     {
         Id = id;
         FechaCompra = fechaCompra;
@@ -19,6 +19,7 @@ public class CompraModelo3D
         DireccionFacturacion = direccionFacturacion;
         Descripcion = descripcion;
         PrecioTotal = precioTotal;
+        MetodoPago = metodoPago;
     }
 
     [Key]
@@ -42,5 +43,8 @@ public class CompraModelo3D
 
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
+    [Required(ErrorMessage = "El método de pago es obligatorio")]
+    public MetodoPago MetodoPago { get; set; }
+
     public IList<LineaCompraModelo> LineasCompraModelo { get; set; } = new List<LineaCompraModelo>();
 }
