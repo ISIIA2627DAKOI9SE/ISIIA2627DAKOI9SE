@@ -1,0 +1,18 @@
+@startuml
+
+class ReservaImpresora {
+    + ReservaImpresora()
+    + Id : int <<get>> <<set>>
+    + FechaReserva : DateTime <<get>> <<set>>
+    + NombreCliente : string <<get>> <<set>>
+    + ApellidosCliente : string <<get>> <<set>>
+    + DireccionFacturacion : string <<get>> <<set>>
+    + PrecioTotal : decimal <<get>> <<set>>
+    + MetodoPago : MetodoPago <<get>> <<set>>
+    + LineasReserva : IList<LineaReserva> <<get>> <<set>>
+}
+
+ReservaImpresora --> "MetodoPago" MetodoPago
+ReservaImpresora o-- "1..*" LineaReserva
+
+@enduml
