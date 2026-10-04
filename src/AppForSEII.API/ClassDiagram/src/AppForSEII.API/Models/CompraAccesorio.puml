@@ -1,0 +1,23 @@
+@startuml
+class CompraAccesorio {
+    + CompraAccesorio()
+    + CompraAccesorio(id:int, fechaCompra:DateTime, nombreCliente:string, apellidosCliente:string, direccionEnvio:string, numeroTelefono:string, precioTotal:decimal, metodoPago:MetodoPago)
+    + Id : int <<get>> <<set>>
+    + FechaCompra : DateTime <<get>> <<set>>
+    + NombreCliente : string <<get>> <<set>>
+    + ApellidosCliente : string <<get>> <<set>>
+    + DireccionEnvio : string <<get>> <<set>>
+    + NumeroTelefono : string <<get>> <<set>>
+    + PrecioTotal : decimal <<get>> <<set>>
+    + ClienteId : string <<get>> <<set>>
+    + MetodoPago : MetodoPago <<get>> <<set>>
+}
+enum MetodoPago {
+    TarjetaCredito,
+    PayPal,
+    Bizum,
+}
+
+CompraAccesorio o-- "0..* LineaCompraAccesorios" "LineaCompraAccesorio"
+CompraAccesorio -- "Cliente" Cliente
+@enduml
