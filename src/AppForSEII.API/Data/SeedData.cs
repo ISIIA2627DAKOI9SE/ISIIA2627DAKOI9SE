@@ -47,21 +47,32 @@ namespace AppForSEII.API.Data
                 );
             }
 
-            // UC Reservar impresoras 3D
+            // Caso de uso: Comprar accesorios para impresión 3D
             try
             {
-                SeedImpresoras3D(dbContext);
-                SeedReservasImpresora(dbContext);
+                SeedAccesorios(dbContext);
             }
             catch (Exception ex)
             {
                 logger.LogError(
                     ex,
-                    "An error occurred seeding reservation data in the Database."
+                    "An error occurred seeding the Accesorios in the Database."
                 );
             }
 
-            // UC Comprar modelos 3D
+            try
+            {
+                SeedComprasAccesorios(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(
+                    ex,
+                    "An error occurred seeding the Compras de Accesorios in the Database."
+                );
+            }
+
+            // Caso de uso: Comprar modelos 3D
             try
             {
                 SeedComprarModelos3D(dbContext);
@@ -128,12 +139,15 @@ namespace AppForSEII.API.Data
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
-                ApplicationUser user =
-                    new ApplicationUser(
+                // Peter es un Cliente (hereda de ApplicationUser): necesario para
+                // asociarle compras de accesorios (Cliente 1 -- realiza -- 0..* CompraAccesorio)
+                Cliente user =
+                    new Cliente(
                         "3",
                         "Peter",
                         "Jackson",
-                        "peter@uclm.es"
+                        "peter@uclm.es",
+                        "Calle Mayor 12, Albacete"
                     );
 
                 user.EmailConfirmed = true;
@@ -146,7 +160,7 @@ namespace AppForSEII.API.Data
 
                 result.Wait();
 
-                if (result.IsCompletedSuccessfully)
+                if (result.Result.Succeeded)
                 {
                     userManager
                         .AddToRoleAsync(user, roles[2])
@@ -239,6 +253,147 @@ namespace AppForSEII.API.Data
         // UC COMPRAR MODELOS 3D
         // ==========================================================
 
+
+        public static void SeedAccesorios(ApplicationDbContext dbContext)
+        {
+            // Si ya hay accesorios, no se vuelven a insertar
+            if (dbContext.Accesorios.Any())
+            {
+                return;
+            }
+
+            dbContext.Accesorios.AddRange(
+                new Accesorio
+                {
+                    Nombre = "Boquilla de Latón 0.4mm",
+                    CategoriaAccesorio = CategoriaAccesorio.Boquillas,
+                    Compatibilidad = "Creality Ender 3, Prusa i3",
+                    CantidadDisponible = 150,
+                    Precio = 4.50m
+                },
+                new Accesorio
+                {
+                    Nombre = "Boquilla de Acero Endurecido 0.6mm",
+                    CategoriaAccesorio = CategoriaAccesorio.Boquillas,
+                    Compatibilidad = "Bambu Lab P1S, Creality K1",
+                    CantidadDisponible = 30,
+                    Precio = 9.95m
+                },
+                new Accesorio
+                {
+                    Nombre = "Base de Impresión PEI Magnética",
+                    CategoriaAccesorio = CategoriaAccesorio.BasesImpresion,
+                    Compatibilidad = "Artillery Sidewinder X1, Artillery Genius",
+                    CantidadDisponible = 20,
+                    Precio = 25.99m
+                },
+                new Accesorio
+                {
+                    Nombre = "Espátula de Retirada de Piezas",
+                    CategoriaAccesorio = CategoriaAccesorio.Herramientas,
+                    Compatibilidad = "Universal",
+                    CantidadDisponible = 40,
+                    Precio = 5.90m
+                },
+                new Accesorio
+                {
+                    Nombre = "Alicate de Corte de Precisión",
+                    CategoriaAccesorio = CategoriaAccesorio.Herramientas,
+                    Compatibilidad = "Universal",
+                    CantidadDisponible = 25,
+                    Precio = 8.75m
+                },
+                new Accesorio
+                {
+                    Nombre = "Kit de Limpieza de Boquillas y Agujas",
+                    CategoriaAccesorio = CategoriaAccesorio.KitsLimpieza,
+                    Compatibilidad = "Universal",
+                    CantidadDisponible = 45,
+                    Precio = 9.99m
+                },
+                new Accesorio
+                {
+                    Nombre = "Termistor NTC 100K",
+                    CategoriaAccesorio = CategoriaAccesorio.Repuestos,
+                    Compatibilidad = "E3D V6 Hotend",
+                    CantidadDisponible = 80,
+                    Precio = 6.20m
+                },
+                new Accesorio
+                {
+                    Nombre = "Ventilador de Capa 4010",
+                    CategoriaAccesorio = CategoriaAccesorio.Repuestos,
+                    Compatibilidad = "Creality Ender 3 V2",
+                    CantidadDisponible = 0, // sin stock: sirve para probar los flujos alternativos 2.1 / 3.1 / 7.3
+                    Precio = 3.80m
+                }
+            );
+
+            dbContext.SaveChanges();
+        }
+
+        public static void SeedComprasAccesorios(ApplicationDbContext dbContext)
+        {
+            if (dbContext.ComprasAccesorios.Any())
+            {
+                return;
+            }
+
+            // El cliente se crea en SeedUsers
+            var cliente =
+                dbContext.Clientes.FirstOrDefault(c => c.Email == "peter@uclm.es");
+
+            if (cliente == null)
+            {
+                return;
+            }
+
+            var boquilla =
+                dbContext.Accesorios.First(a => a.Nombre == "Boquilla de Latón 0.4mm");
+
+            var basePei =
+                dbContext.Accesorios.First(a => a.Nombre == "Base de Impresión PEI Magnética");
+
+            var compra = new CompraAccesorio
+            {
+                FechaCompra = DateTime.UtcNow,
+                NombreCliente = cliente.Name!,
+                ApellidosCliente = cliente.Surname!,
+                DireccionEnvio = cliente.DireccionFacturacion,
+                NumeroTelefono = "600123456",
+                MetodoPago = MetodoPago.TarjetaCredito,
+                ClienteId = cliente.Id,
+                LineaCompraAccesorios = new List<LineaCompraAccesorio>
+                {
+                    new LineaCompraAccesorio
+                    {
+                        AccesorioId = boquilla.Id,
+                        Cantidad = 2,
+                        PrecioUnidad = boquilla.Precio,
+                        Subtotal = 2 * boquilla.Precio
+                    },
+                    new LineaCompraAccesorio
+                    {
+                        AccesorioId = basePei.Id,
+                        Cantidad = 1,
+                        PrecioUnidad = basePei.Precio,
+                        Subtotal = basePei.Precio
+                    }
+                }
+            };
+
+            compra.PrecioTotal = compra.LineaCompraAccesorios.Sum(l => l.Subtotal);
+
+            // Descontar el stock vendido
+            boquilla.CantidadDisponible -= 2;
+            basePei.CantidadDisponible -= 1;
+
+            dbContext.ComprasAccesorios.Add(compra);
+            dbContext.SaveChanges();
+        }
+
+
+
         public static void SeedComprarModelos3D(
             ApplicationDbContext dbContext)
         {
@@ -249,6 +404,7 @@ namespace AppForSEII.API.Data
             {
                 return;
             }
+
 
             LicenciaModelo3D licenciaPersonal =
                 new LicenciaModelo3D(
@@ -315,6 +471,7 @@ namespace AppForSEII.API.Data
             soporteAuriculares.LicenciasModelo3D.Add(
                 licenciaProfesional
             );
+
 
             LineaCompraModelo linea1 =
                 new LineaCompraModelo(
