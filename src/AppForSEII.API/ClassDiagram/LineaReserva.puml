@@ -6,7 +6,6 @@ class LineaReserva {
     + PrecioSubtotal : decimal
 }
 
-LineaReserva --> TiempoReserva
 
 LineaReserva "0..*" --> "1" Impresora3D : impresora
 
