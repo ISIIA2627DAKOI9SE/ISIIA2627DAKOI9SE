@@ -1,0 +1,21 @@
+@startuml
+
+!include .\IdentityUser.puml
+!include .\ApplicationUser.puml
+!include .\Cliente.puml
+!include .\MetodoPago.puml
+!include .\CategoriaAccesorio.puml
+!include .\Accesorio.puml
+!include .\LineaCompraAccesorio.puml
+!include .\CompraAccesorio.puml
+
+' Ocultar clases de otros casos de uso que se arrastran por las relaciones
+hide ReservaImpresora
+' Enumeraciones separadas en la parte superior
+MetodoPago -[hidden]- CategoriaAccesorio
+
+' Forzar el espaciado para que bajen las clases
+MetodoPago -[hidden]down- ApplicationUser
+CategoriaAccesorio -[hidden]down- Accesorio
+
+@enduml
