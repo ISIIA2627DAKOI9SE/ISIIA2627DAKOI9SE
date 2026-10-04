@@ -1,0 +1,74 @@
+@startuml
+
+skinparam linetype ortho
+
+class IdentityUser
+
+class ApplicationUser {
+    + Name : string? <<get>> <<set>>
+    + Surname : string? <<get>> <<set>>
+    + UserName : string? <<get>> <<set>>
+    + Email : string? <<get>> <<set>>
+}
+
+class Cliente {
+    + DireccionFacturacion : string
+}
+
+class CompraModelo3D {
+    + Id : int
+    + FechaCompra : DateTime
+    + NombreCliente : string
+    + ApellidosCliente : string
+    + CorreoElectronico : string
+    + DireccionFacturacion : string
+    + Descripcion : string?
+    + PrecioTotal : decimal
+    + MetodoPago : MetodoPago
+}
+
+class LineaCompraModelo {
+    + Id : int
+    + CantidadLicencias : int
+    + PrecioUnidad : decimal
+    + Subtotal : decimal
+}
+
+class Modelo3D {
+    + Id : int
+    + Nombre : string
+    + Categoria : string
+    + Formato : FormatoModelo3D
+    + Precio : decimal
+}
+
+class LicenciaModelo3D {
+    + Id : int
+    + Nombre : string
+    + FechaExpiracion : DateTime
+}
+
+enum FormatoModelo3D {
+    STL
+    OBJ
+    TresMF
+}
+
+enum MetodoPago {
+    TarjetaCredito
+    PayPal
+    Bizum
+}
+
+IdentityUser <|-- ApplicationUser
+ApplicationUser <|-- Cliente
+
+Cliente "1" -- "0..*" CompraModelo3D : realiza
+
+CompraModelo3D "1" *-- "1..*" LineaCompraModelo : contiene
+
+LineaCompraModelo "0..*" --> "1" Modelo3D : modelo
+
+Modelo3D "1" --> "0..*" LicenciaModelo3D : licencia
+
+@enduml
