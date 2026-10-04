@@ -1,5 +1,6 @@
 @startuml
 
+!include .\IdentityUser.puml
 !include .\ApplicationUser.puml
 !include .\Cliente.puml
 !include .\MetodoPago.puml

@@ -1,5 +1,12 @@
 @startuml
 
-class ApplicationUser
+class ApplicationUser {
+    + Name : string? <<get>> <<set>>
+    + Surname : string? <<get>> <<set>>
+    + UserName : string? <<get>> <<set>>
+    + Email : string? <<get>> <<set>>
+}
+
+IdentityUser <|-- ApplicationUser
 
 @enduml
