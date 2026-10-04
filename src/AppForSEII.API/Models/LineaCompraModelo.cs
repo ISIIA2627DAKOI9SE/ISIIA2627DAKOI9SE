@@ -9,11 +9,7 @@ public class LineaCompraModelo
     {
     }
 
-    public LineaCompraModelo(
-        int id,
-        int cantidadLicencias,
-        decimal precioUnidad,
-        decimal subtotal)
+    public LineaCompraModelo(int id,int cantidadLicencias,decimal precioUnidad,decimal subtotal)
     {
         Id = id;
         CantidadLicencias = cantidadLicencias;
