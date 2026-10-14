@@ -108,13 +108,13 @@ namespace AppForSEII.API.Data
             {
                 if (!roleManager.RoleExistsAsync(roleName).Result)
                 {
-                    IdentityRole role = new IdentityRole();
+                    IdentityRole role = new IdentityRole
+                    {
+                        Name = roleName,
+                        NormalizedName = roleName
+                    };
 
-                    role.Name = roleName;
-                    role.NormalizedName = roleName;
-
-                    IdentityResult roleResult =
-                        roleManager.CreateAsync(role).Result;
+                    roleManager.CreateAsync(role).Wait();
                 }
             }
         }
@@ -125,58 +125,46 @@ namespace AppForSEII.API.Data
         {
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
             {
-                ApplicationUser user =
-                    new ApplicationUser(
-                        "1",
-                        "Elena",
-                        "Navarro Martínez",
-                        "elena@uclm.es"
-                    );
+                ApplicationUser user = new ApplicationUser(
+                    "1",
+                    "Elena",
+                    "Navarro Martínez",
+                    "elena@uclm.es"
+                );
 
                 user.EmailConfirmed = true;
 
-                var result =
-                    userManager.CreateAsync(
-                        user,
-                        "Password1234%"
-                    );
+                var result = userManager.CreateAsync(
+                    user,
+                    "Password1234%"
+                ).Result;
 
-                result.Wait();
-
-                if (result.IsCompletedSuccessfully)
+                if (result.Succeeded)
                 {
-                    userManager
-                        .AddToRoleAsync(user, roles[0])
-                        .Wait();
+                    userManager.AddToRoleAsync(user, roles[0]).Wait();
                 }
             }
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
-                Cliente user =
-                    new Cliente(
-                        "3",
-                        "Peter",
-                        "Jackson",
-                        "peter@uclm.es",
-                        "Calle Mayor 12, Albacete"
-                    );
+                Cliente user = new Cliente(
+                    "3",
+                    "Peter",
+                    "Jackson",
+                    "peter@uclm.es",
+                    "Calle Mayor 12, Albacete"
+                );
 
                 user.EmailConfirmed = true;
 
-                var result =
-                    userManager.CreateAsync(
-                        user,
-                        "OtherPass12$"
-                    );
+                var result = userManager.CreateAsync(
+                    user,
+                    "OtherPass12$"
+                ).Result;
 
-                result.Wait();
-
-                if (result.Result.Succeeded)
+                if (result.Succeeded)
                 {
-                    userManager
-                        .AddToRoleAsync(user, roles[2])
-                        .Wait();
+                    userManager.AddToRoleAsync(user, roles[2]).Wait();
                 }
             }
         }
@@ -188,77 +176,82 @@ namespace AppForSEII.API.Data
         public static void SeedImpresoras3D(
             ApplicationDbContext dbContext)
         {
-            if (!dbContext.Impresora3Ds.Any())
+            if (dbContext.Impresora3Ds.Any())
             {
-                Impresora3D impresora1 = new Impresora3D
-                {
-                    Nombre = "Prusa MK4",
-                    Modelo = "MK4",
-                    Tipo = TipoImpresora.Filamento,
-                    Descripcion =
-                        "Impresora 3D de filamento para reservas",
-                    PrecioKilovatioHora = 0.25m,
-                    PrecioReserva = 8.00m
-                };
-
-                Impresora3D impresora2 = new Impresora3D
-                {
-                    Nombre = "Elegoo Mars",
-                    Modelo = "Mars 4",
-                    Tipo = TipoImpresora.Resina,
-                    Descripcion =
-                        "Impresora 3D de resina para piezas de alta precisión",
-                    PrecioKilovatioHora = 0.30m,
-                    PrecioReserva = 10.00m
-                };
-
-                dbContext.Impresora3Ds.AddRange(
-                    impresora1,
-                    impresora2
-                );
-
-                dbContext.SaveChanges();
+                return;
             }
+
+            Impresora3D impresora1 = new Impresora3D
+            {
+                Nombre = "Prusa MK4",
+                Modelo = "MK4",
+                Tipo = TipoImpresora.Filamento,
+                Descripcion = "Impresora 3D de filamento para reservas",
+                PrecioKilovatioHora = 0.25m,
+                PrecioReserva = 8.00m
+            };
+
+            Impresora3D impresora2 = new Impresora3D
+            {
+                Nombre = "Elegoo Mars",
+                Modelo = "Mars 4",
+                Tipo = TipoImpresora.Resina,
+                Descripcion = "Impresora 3D de resina para piezas de alta precisión",
+                PrecioKilovatioHora = 0.30m,
+                PrecioReserva = 10.00m
+            };
+
+            dbContext.Impresora3Ds.AddRange(impresora1, impresora2);
+            dbContext.SaveChanges();
         }
 
         public static void SeedReservasImpresora(
             ApplicationDbContext dbContext)
         {
-            if (!dbContext.ReservaImpresoras.Any())
+            if (dbContext.ReservaImpresoras.Any())
             {
-                Impresora3D? impresora =
-                    dbContext.Impresora3Ds.FirstOrDefault();
-
-                if (impresora != null)
-                {
-                    LineaReserva lineaReserva = new LineaReserva
-                    {
-                        TiempoReserva = TiempoReserva.DosHoras,
-                        PrecioSubtotal = 16.00m,
-                        Impresora3D = impresora
-                    };
-
-                    ReservaImpresora reserva =
-                        new ReservaImpresora
-                        {
-                            FechaReserva = DateTime.Now,
-                            NombreCliente = "Peter",
-                            ApellidosCliente = "Jackson",
-                            DireccionFacturacion =
-                                "Calle Ejemplo 1, Albacete",
-                            PrecioTotal = 16.00m,
-                            MetodoPago = MetodoPago.Bizum,
-                            LineasReserva =
-                                new List<LineaReserva>
-                                {
-                                    lineaReserva
-                                }
-                        };
-
-                    dbContext.ReservaImpresoras.Add(reserva);
-                    dbContext.SaveChanges();
-                }
+                return;
             }
+
+            Impresora3D? impresora =
+                dbContext.Impresora3Ds.FirstOrDefault();
+
+            Cliente? cliente =
+                dbContext.Clientes.FirstOrDefault(
+                    c => c.UserName == "peter@uclm.es"
+                );
+
+            if (impresora == null || cliente == null)
+            {
+                return;
+            }
+
+            LineaReserva lineaReserva = new LineaReserva
+            {
+                TiempoReserva = TiempoReserva.DosHoras,
+                PrecioSubtotal = 16.00m,
+                Impresora3DId = impresora.Id,
+                Impresora3D = impresora
+            };
+
+            ReservaImpresora reserva = new ReservaImpresora
+            {
+                FechaReserva = DateTime.Now,
+                NombreCliente = "Peter",
+                ApellidosCliente = "Jackson",
+                DireccionFacturacion = "Calle Ejemplo 1, Albacete",
+                PrecioTotal = 16.00m,
+                MetodoPago = MetodoPago.Bizum,
+                ClienteId = cliente.Id,
+                Cliente = cliente,
+                LineasReserva = new List<LineaReserva>
+                {
+                    lineaReserva
+                }
+            };
+
+            dbContext.ReservaImpresoras.Add(reserva);
+            dbContext.SaveChanges();
         }
 
         // ==========================================================
@@ -342,32 +335,30 @@ namespace AppForSEII.API.Data
             dbContext.SaveChanges();
         }
 
-        public static void SeedComprasAccesorios(ApplicationDbContext dbContext)
+        public static void SeedComprasAccesorios(
+            ApplicationDbContext dbContext)
         {
             if (dbContext.ComprasAccesorios.Any())
             {
                 return;
             }
 
-            var cliente =
-                dbContext.Clientes.FirstOrDefault(
-                    c => c.Email == "peter@uclm.es"
-                );
+            var cliente = dbContext.Clientes.FirstOrDefault(
+                c => c.Email == "peter@uclm.es"
+            );
 
             if (cliente == null)
             {
                 return;
             }
 
-            var boquilla =
-                dbContext.Accesorios.First(
-                    a => a.Nombre == "Boquilla de Latón 0.4mm"
-                );
+            var boquilla = dbContext.Accesorios.First(
+                a => a.Nombre == "Boquilla de Latón 0.4mm"
+            );
 
-            var basePei =
-                dbContext.Accesorios.First(
-                    a => a.Nombre == "Base de Impresión PEI Magnética"
-                );
+            var basePei = dbContext.Accesorios.First(
+                a => a.Nombre == "Base de Impresión PEI Magnética"
+            );
 
             var compra = new CompraAccesorio
             {
@@ -378,24 +369,23 @@ namespace AppForSEII.API.Data
                 NumeroTelefono = "600123456",
                 MetodoPago = MetodoPago.TarjetaCredito,
                 ClienteId = cliente.Id,
-                LineaCompraAccesorios =
-                    new List<LineaCompraAccesorio>
+                LineaCompraAccesorios = new List<LineaCompraAccesorio>
+                {
+                    new LineaCompraAccesorio
                     {
-                        new LineaCompraAccesorio
-                        {
-                            AccesorioId = boquilla.Id,
-                            Cantidad = 2,
-                            PrecioUnidad = boquilla.Precio,
-                            Subtotal = 2 * boquilla.Precio
-                        },
-                        new LineaCompraAccesorio
-                        {
-                            AccesorioId = basePei.Id,
-                            Cantidad = 1,
-                            PrecioUnidad = basePei.Precio,
-                            Subtotal = basePei.Precio
-                        }
+                        AccesorioId = boquilla.Id,
+                        Cantidad = 2,
+                        PrecioUnidad = boquilla.Precio,
+                        Subtotal = 2 * boquilla.Precio
+                    },
+                    new LineaCompraAccesorio
+                    {
+                        AccesorioId = basePei.Id,
+                        Cantidad = 1,
+                        PrecioUnidad = basePei.Precio,
+                        Subtotal = basePei.Precio
                     }
+                }
             };
 
             compra.PrecioTotal =
@@ -471,50 +461,22 @@ namespace AppForSEII.API.Data
                     4.99m
                 );
 
-            dragonMedieval.LicenciasModelo3D.Add(
-                licenciaPersonal
-            );
-
-            dragonMedieval.LicenciasModelo3D.Add(
-                licenciaComercial
-            );
-
-            torreMedieval.LicenciasModelo3D.Add(
-                licenciaComercial
-            );
-
-            soporteAuriculares.LicenciasModelo3D.Add(
-                licenciaProfesional
-            );
+            // Relación modelo 3D - licencias
+            dragonMedieval.LicenciasModelo3D.Add(licenciaPersonal);
+            dragonMedieval.LicenciasModelo3D.Add(licenciaComercial);
+            torreMedieval.LicenciasModelo3D.Add(licenciaComercial);
+            soporteAuriculares.LicenciasModelo3D.Add(licenciaProfesional);
 
             LineaCompraModelo linea1 =
-                new LineaCompraModelo(
-                    0,
-                    2,
-                    9.99m,
-                    19.98m
-                );
-
+                new LineaCompraModelo(0, 2, 9.99m, 19.98m);
             linea1.Modelo3D = dragonMedieval;
 
             LineaCompraModelo linea2 =
-                new LineaCompraModelo(
-                    0,
-                    1,
-                    14.99m,
-                    14.99m
-                );
-
+                new LineaCompraModelo(0, 1, 14.99m, 14.99m);
             linea2.Modelo3D = torreMedieval;
 
             LineaCompraModelo linea3 =
-                new LineaCompraModelo(
-                    0,
-                    1,
-                    4.99m,
-                    4.99m
-                );
-
+                new LineaCompraModelo(0, 1, 4.99m, 4.99m);
             linea3.Modelo3D = soporteAuriculares;
 
             CompraModelo3D compra1 =
@@ -530,13 +492,8 @@ namespace AppForSEII.API.Data
                     MetodoPago.PayPal
                 );
 
-            compra1.LineasCompraModelo.Add(
-                linea1
-            );
-
-            compra1.LineasCompraModelo.Add(
-                linea2
-            );
+            compra1.LineasCompraModelo.Add(linea1);
+            compra1.LineasCompraModelo.Add(linea2);
 
             CompraModelo3D compra2 =
                 new CompraModelo3D(
@@ -551,15 +508,9 @@ namespace AppForSEII.API.Data
                     MetodoPago.TarjetaCredito
                 );
 
-            compra2.LineasCompraModelo.Add(
-                linea3
-            );
+            compra2.LineasCompraModelo.Add(linea3);
 
-            dbContext.ComprasModelo3Ds.AddRange(
-                compra1,
-                compra2
-            );
-
+            dbContext.ComprasModelo3Ds.AddRange(compra1, compra2);
             dbContext.SaveChanges();
         }
     }
