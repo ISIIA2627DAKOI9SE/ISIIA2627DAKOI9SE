@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
+[PrimaryKey(nameof(ReservaImpresoraId), nameof(Impresora3DId))]
+
 public class LineaReserva
 {
     public LineaReserva()
