@@ -143,7 +143,7 @@ namespace AppForSEII.API.Data
 
                 result.Wait();
 
-                if (result.IsCompletedSuccessfully)
+                if (result.Result.Succeeded)
                 {
                     userManager
                         .AddToRoleAsync(user, roles[0])
@@ -153,6 +153,8 @@ namespace AppForSEII.API.Data
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
+                // Peter es un Cliente (hereda de ApplicationUser): necesario para
+                // asociarle compras de accesorios (Cliente 1 -- realiza -- 0..* CompraAccesorio)
                 Cliente user =
                     new Cliente(
                         "3",
@@ -344,7 +346,7 @@ namespace AppForSEII.API.Data
 
         public static void SeedComprasAccesorios(ApplicationDbContext dbContext)
         {
-            if (dbContext.ComprasAccesorios.Any())
+            if (dbContext.CompraAccesorios.Any())
             {
                 return;
             }
@@ -404,13 +406,14 @@ namespace AppForSEII.API.Data
             boquilla.CantidadDisponible -= 2;
             basePei.CantidadDisponible -= 1;
 
-            dbContext.ComprasAccesorios.Add(compra);
+            dbContext.CompraAccesorios.Add(compra);
             dbContext.SaveChanges();
         }
 
         // ==========================================================
         // UC COMPRAR MODELOS 3D
         // ==========================================================
+
 
         public static void SeedComprarModelos3D(
             ApplicationDbContext dbContext)
@@ -422,6 +425,7 @@ namespace AppForSEII.API.Data
             {
                 return;
             }
+
 
             LicenciaModelo3D licenciaPersonal =
                 new LicenciaModelo3D(
@@ -486,6 +490,7 @@ namespace AppForSEII.API.Data
             soporteAuriculares.LicenciasModelo3D.Add(
                 licenciaProfesional
             );
+
 
             LineaCompraModelo linea1 =
                 new LineaCompraModelo(
