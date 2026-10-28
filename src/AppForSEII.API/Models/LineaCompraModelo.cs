@@ -4,7 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppForSEII.API.Models;
 
+[PrimaryKey(nameof(CompraModelo3DId),nameof(Modelo3DId))]
+
 public class LineaCompraModelo
+
 {
     public LineaCompraModelo()
     {
@@ -31,9 +34,9 @@ public class LineaCompraModelo
     public decimal Subtotal { get; set; }
 
     [Required]
-    public int CompraModelo3DId { get; set; }
+    public int CompraModelo3DId { get; set; }  
 
-    [ForeignKey(nameof(CompraModelo3DId))]
+    //CAMBIA
     public CompraModelo3D CompraModelo3D { get; set; } = null!;
 
     public Modelo3D Modelo3D { get; set; } = null!;
