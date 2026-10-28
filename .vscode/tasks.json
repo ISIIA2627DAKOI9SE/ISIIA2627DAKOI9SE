@@ -1,45 +1,61 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build-api",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/AppForSEII.API/AppForSEII.API.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "build-web",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/AppForSEII.Web/AppForSEII.Web.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "test-unit",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "test",
-                "${workspaceFolder}/test/AppForSEII.UT/AppForSEII.UT.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "test-ui",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "test",
-                "${workspaceFolder}/test/AppForSEII.UIT/AppForSEII.UIT.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build-api",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/AppForSEII.API/AppForSEII.API.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "build-web",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/AppForSEII.Web/AppForSEII.Web.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-unit",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"test",
+				"${workspaceFolder}/test/AppForSEII.UT/AppForSEII.UT.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "test-ui",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"test",
+				"${workspaceFolder}/test/AppForSEII.UIT/AppForSEII.UIT.csproj"
+			],
+			"problemMatcher": "$msCompile"
+		},
+		{
+			"label": "sqlproj: Build Database1",
+			"type": "process",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"c:/Users/alrog/OneDrive/Escritorio/ISO2/practicas/ISIIA2627DAKOI9SE/Database1/Database1.sqlproj"
+			],
+			"problemMatcher": "$sqlproj-problem-matcher",
+			"isBackground": true,
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "Builds the Database1 SQL project"
+		}
+	]
 }
