@@ -1,19 +1,21 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
-[PrimaryKey(nameof(CompraModelo3DId),nameof(Modelo3DId))]
-
+[PrimaryKey(nameof(CompraModelo3DId), nameof(Modelo3DId))]
 public class LineaCompraModelo
-
 {
     public LineaCompraModelo()
     {
     }
 
-    public LineaCompraModelo(int id,int cantidadLicencias,decimal precioUnidad,decimal subtotal)
+    public LineaCompraModelo(
+        int id,
+        int cantidadLicencias,
+        decimal precioUnidad,
+        decimal subtotal)
     {
         Id = id;
         CantidadLicencias = cantidadLicencias;
@@ -21,7 +23,8 @@ public class LineaCompraModelo
         Subtotal = subtotal;
     }
 
-    [Key]
+    // Se conserva para mantener compatible el constructor actual.
+    // No forma parte de la clave primaria.
     public int Id { get; set; }
 
     [Required(ErrorMessage = "La cantidad de licencias es obligatoria")]
@@ -33,12 +36,13 @@ public class LineaCompraModelo
     [Precision(10, 2)]
     public decimal Subtotal { get; set; }
 
-    [Required]
-    public int CompraModelo3DId { get; set; }  
+    public int CompraModelo3DId { get; set; }
 
-    //CAMBIA
+    [ForeignKey(nameof(CompraModelo3DId))]
     public CompraModelo3D CompraModelo3D { get; set; } = null!;
 
-    public Modelo3D Modelo3D { get; set; } = null!;
+    public int Modelo3DId { get; set; }
 
+    [ForeignKey(nameof(Modelo3DId))]
+    public Modelo3D Modelo3D { get; set; } = null!;
 }
