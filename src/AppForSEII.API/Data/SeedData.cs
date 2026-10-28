@@ -114,7 +114,8 @@ namespace AppForSEII.API.Data
                         NormalizedName = roleName
                     };
 
-                    roleManager.CreateAsync(role).Wait();
+                    IdentityResult roleResult =
+                        roleManager.CreateAsync(role).Result;
                 }
             }
         }
@@ -141,16 +142,15 @@ namespace AppForSEII.API.Data
 
                 result.Wait();
 
-                if (result.IsCompletedSuccessfully)
+                if (result.Result.Succeeded)
                 {
-                    userManager
-                        .AddToRoleAsync(user, roles[0])
-                        .Wait();
+                    userManager.AddToRoleAsync(user, roles[0]).Wait();
                 }
             }
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
+                // Peter es un Cliente que puede realizar compras.
                 Cliente user = new Cliente(
                     "3",
                     "Peter",
@@ -170,9 +170,7 @@ namespace AppForSEII.API.Data
 
                 if (result.Result.Succeeded)
                 {
-                    userManager
-                        .AddToRoleAsync(user, roles[2])
-                        .Wait();
+                    userManager.AddToRoleAsync(user, roles[2]).Wait();
                 }
             }
         }
@@ -184,37 +182,33 @@ namespace AppForSEII.API.Data
         public static void SeedImpresoras3D(
             ApplicationDbContext dbContext)
         {
-            if (!dbContext.Impresora3Ds.Any())
+            if (dbContext.Impresora3Ds.Any())
             {
-                Impresora3D impresora1 = new Impresora3D
-                {
-                    Nombre = "Prusa MK4",
-                    Modelo = "MK4",
-                    Tipo = TipoImpresora.Filamento,
-                    Descripcion =
-                        "Impresora 3D de filamento para reservas",
-                    PrecioKilovatioHora = 0.25m,
-                    PrecioReserva = 8.00m
-                };
-
-                Impresora3D impresora2 = new Impresora3D
-                {
-                    Nombre = "Elegoo Mars",
-                    Modelo = "Mars 4",
-                    Tipo = TipoImpresora.Resina,
-                    Descripcion =
-                        "Impresora 3D de resina para piezas de alta precisión",
-                    PrecioKilovatioHora = 0.30m,
-                    PrecioReserva = 10.00m
-                };
-
-                dbContext.Impresora3Ds.AddRange(
-                    impresora1,
-                    impresora2
-                );
-
-                dbContext.SaveChanges();
+                return;
             }
+
+            Impresora3D impresora1 = new Impresora3D
+            {
+                Nombre = "Prusa MK4",
+                Modelo = "MK4",
+                Tipo = TipoImpresora.Filamento,
+                Descripcion = "Impresora 3D de filamento para reservas",
+                PrecioKilovatioHora = 0.25m,
+                PrecioReserva = 8.00m
+            };
+
+            Impresora3D impresora2 = new Impresora3D
+            {
+                Nombre = "Elegoo Mars",
+                Modelo = "Mars 4",
+                Tipo = TipoImpresora.Resina,
+                Descripcion = "Impresora 3D de resina para piezas de alta precisión",
+                PrecioKilovatioHora = 0.30m,
+                PrecioReserva = 10.00m
+            };
+
+            dbContext.Impresora3Ds.AddRange(impresora1, impresora2);
+            dbContext.SaveChanges();
         }
 
         public static void SeedReservasImpresora(
@@ -228,12 +222,7 @@ namespace AppForSEII.API.Data
             Impresora3D? impresora =
                 dbContext.Impresora3Ds.FirstOrDefault();
 
-            Cliente? cliente =
-                dbContext.Clientes.FirstOrDefault(
-                    c => c.UserName == "peter@uclm.es"
-                );
-
-            if (impresora == null || cliente == null)
+            if (impresora == null)
             {
                 return;
             }
@@ -242,7 +231,6 @@ namespace AppForSEII.API.Data
             {
                 TiempoReserva = TiempoReserva.DosHoras,
                 PrecioSubtotal = 16.00m,
-                Impresora3DId = impresora.Id,
                 Impresora3D = impresora
             };
 
@@ -251,12 +239,9 @@ namespace AppForSEII.API.Data
                 FechaReserva = DateTime.Now,
                 NombreCliente = "Peter",
                 ApellidosCliente = "Jackson",
-                DireccionFacturacion =
-                    "Calle Ejemplo 1, Albacete",
+                DireccionFacturacion = "Calle Ejemplo 1, Albacete",
                 PrecioTotal = 16.00m,
                 MetodoPago = MetodoPago.Bizum,
-                ClienteId = cliente.Id,
-                Cliente = cliente,
                 LineasReserva = new List<LineaReserva>
                 {
                     lineaReserva
@@ -300,8 +285,7 @@ namespace AppForSEII.API.Data
                 {
                     Nombre = "Base de Impresión PEI Magnética",
                     CategoriaAccesorio = CategoriaAccesorio.BasesImpresion,
-                    Compatibilidad =
-                        "Artillery Sidewinder X1, Artillery Genius",
+                    Compatibilidad = "Artillery Sidewinder X1, Artillery Genius",
                     CantidadDisponible = 20,
                     Precio = 25.99m
                 },
@@ -353,7 +337,7 @@ namespace AppForSEII.API.Data
         public static void SeedComprasAccesorios(
             ApplicationDbContext dbContext)
         {
-            if (dbContext.ComprasAccesorios.Any())
+            if (dbContext.CompraAccesorios.Any())
             {
                 return;
             }
@@ -384,24 +368,23 @@ namespace AppForSEII.API.Data
                 NumeroTelefono = "600123456",
                 MetodoPago = MetodoPago.TarjetaCredito,
                 ClienteId = cliente.Id,
-                LineaCompraAccesorios =
-                    new List<LineaCompraAccesorio>
+                LineaCompraAccesorios = new List<LineaCompraAccesorio>
+                {
+                    new LineaCompraAccesorio
                     {
-                        new LineaCompraAccesorio
-                        {
-                            AccesorioId = boquilla.Id,
-                            Cantidad = 2,
-                            PrecioUnidad = boquilla.Precio,
-                            Subtotal = 2 * boquilla.Precio
-                        },
-                        new LineaCompraAccesorio
-                        {
-                            AccesorioId = basePei.Id,
-                            Cantidad = 1,
-                            PrecioUnidad = basePei.Precio,
-                            Subtotal = basePei.Precio
-                        }
+                        AccesorioId = boquilla.Id,
+                        Cantidad = 2,
+                        PrecioUnidad = boquilla.Precio,
+                        Subtotal = 2 * boquilla.Precio
+                    },
+                    new LineaCompraAccesorio
+                    {
+                        AccesorioId = basePei.Id,
+                        Cantidad = 1,
+                        PrecioUnidad = basePei.Precio,
+                        Subtotal = basePei.Precio
                     }
+                }
             };
 
             compra.PrecioTotal =
@@ -410,7 +393,7 @@ namespace AppForSEII.API.Data
             boquilla.CantidadDisponible -= 2;
             basePei.CantidadDisponible -= 1;
 
-            dbContext.ComprasAccesorios.Add(compra);
+            dbContext.CompraAccesorios.Add(compra);
             dbContext.SaveChanges();
         }
 
@@ -429,127 +412,99 @@ namespace AppForSEII.API.Data
                 return;
             }
 
-            LicenciaModelo3D licenciaPersonal =
-                new LicenciaModelo3D(
-                    0,
-                    "Licencia Personal",
-                    new DateTime(2027, 6, 30)
-                );
+            LicenciaModelo3D licenciaPersonal = new LicenciaModelo3D(
+                0,
+                "Licencia Personal",
+                new DateTime(2027, 6, 30)
+            );
 
-            LicenciaModelo3D licenciaComercial =
-                new LicenciaModelo3D(
-                    0,
-                    "Licencia Comercial",
-                    new DateTime(2028, 6, 30)
-                );
+            LicenciaModelo3D licenciaComercial = new LicenciaModelo3D(
+                0,
+                "Licencia Comercial",
+                new DateTime(2028, 6, 30)
+            );
 
-            LicenciaModelo3D licenciaProfesional =
-                new LicenciaModelo3D(
-                    0,
-                    "Licencia Profesional",
-                    new DateTime(2029, 6, 30)
-                );
+            LicenciaModelo3D licenciaProfesional = new LicenciaModelo3D(
+                0,
+                "Licencia Profesional",
+                new DateTime(2029, 6, 30)
+            );
 
-            Modelo3D dragonMedieval =
-                new Modelo3D(
-                    0,
-                    "Dragon Medieval",
-                    "Miniaturas",
-                    FormatoModelo3D.STL,
-                    9.99m
-                );
+            Modelo3D dragonMedieval = new Modelo3D(
+                0,
+                "Dragon Medieval",
+                "Miniaturas",
+                FormatoModelo3D.STL,
+                9.99m
+            );
 
-            Modelo3D torreMedieval =
-                new Modelo3D(
-                    0,
-                    "Torre Medieval",
-                    "Arquitectura",
-                    FormatoModelo3D.OBJ,
-                    14.99m
-                );
+            Modelo3D torreMedieval = new Modelo3D(
+                0,
+                "Torre Medieval",
+                "Arquitectura",
+                FormatoModelo3D.OBJ,
+                14.99m
+            );
 
-            Modelo3D soporteAuriculares =
-                new Modelo3D(
-                    0,
-                    "Soporte Auriculares",
-                    "Accesorios",
-                    FormatoModelo3D.TresMF,
-                    4.99m
-                );
+            Modelo3D soporteAuriculares = new Modelo3D(
+                0,
+                "Soporte Auriculares",
+                "Accesorios",
+                FormatoModelo3D.TresMF,
+                4.99m
+            );
 
-            // Relación modelo 3D - licencias
             dragonMedieval.LicenciasModelo3D.Add(licenciaPersonal);
             dragonMedieval.LicenciasModelo3D.Add(licenciaComercial);
             torreMedieval.LicenciasModelo3D.Add(licenciaComercial);
             soporteAuriculares.LicenciasModelo3D.Add(licenciaProfesional);
 
-            LineaCompraModelo linea1 =
-                new LineaCompraModelo(
-                    0,
-                    2,
-                    9.99m,
-                    19.98m
-                );
+            LineaCompraModelo linea1 = new LineaCompraModelo(
+                0,
+                2,
+                9.99m,
+                19.98m
+            );
 
             linea1.Modelo3D = dragonMedieval;
 
-            LineaCompraModelo linea2 =
-                new LineaCompraModelo(
-                    0,
-                    1,
-                    14.99m,
-                    14.99m
-                );
+            LineaCompraModelo linea2 = new LineaCompraModelo(
+                0,
+                1,
+                14.99m,
+                14.99m
+            );
 
             linea2.Modelo3D = torreMedieval;
 
-            LineaCompraModelo linea3 =
-                new LineaCompraModelo(
-                    0,
-                    1,
-                    4.99m,
-                    4.99m
-                );
+            LineaCompraModelo linea3 = new LineaCompraModelo(
+                0,
+                1,
+                4.99m,
+                4.99m
+            );
 
             linea3.Modelo3D = soporteAuriculares;
 
-            CompraModelo3D compra1 =
-                new CompraModelo3D(
-                    0,
-                    new DateTime(2026, 10, 1),
-                    "Peter",
-                    "Jackson",
-                    "peter@uclm.es",
-                    "Calle Mayor 10",
-                    "Compra de modelos para uso personal",
-                    34.97m,
-                    MetodoPago.PayPal
-                );
+            CompraModelo3D compra1 = new CompraModelo3D(
+                0,
+                new DateTime(2026, 10, 1),
+                "Peter",
+                "Jackson",
+                "peter@uclm.es",
+                "Calle Mayor 10",
+                "Compra de modelos para uso personal",
+                34.97m,
+                MetodoPago.PayPal
+            );
 
             compra1.LineasCompraModelo.Add(linea1);
             compra1.LineasCompraModelo.Add(linea2);
 
-            CompraModelo3D compra2 =
-                new CompraModelo3D(
-                    0,
-                    new DateTime(2026, 10, 2),
-                    "Ana",
-                    "Martinez",
-                    "ana@example.com",
-                    "Avenida España 25",
-                    null,
-                    4.99m,
-                    MetodoPago.TarjetaCredito
-                );
-
-            compra2.LineasCompraModelo.Add(linea3);
-
-            dbContext.ComprasModelo3Ds.AddRange(
-                compra1,
-                compra2
-            );
-
-            dbContext.SaveChanges();
-        }
-    }
-}
+            CompraModelo3D compra2 = new CompraModelo3D(
+                0,
+                new DateTime(2026, 10, 2),
+                "Ana",
+                "Martinez",
+                "ana@example.com",
+                "Avenida España 25",

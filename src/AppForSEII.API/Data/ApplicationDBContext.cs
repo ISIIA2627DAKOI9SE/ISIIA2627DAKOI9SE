@@ -22,7 +22,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CompraModelo3D> ComprasModelo3Ds { get; set; }
 
     // UC Comprar accesorios
-    public DbSet<CompraAccesorio> ComprasAccesorios { get; set; }
+    public DbSet<CompraAccesorio> CompraAccesorios { get; set; }
     public DbSet<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
     public DbSet<Accesorio> Accesorios { get; set; }
 

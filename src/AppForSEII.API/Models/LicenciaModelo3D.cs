@@ -9,7 +9,10 @@ public class LicenciaModelo3D
     {
     }
 
-    public LicenciaModelo3D(int id, string nombre, DateTime fechaExpiracion)
+    public LicenciaModelo3D(
+        int id,
+        string nombre,
+        DateTime fechaExpiracion)
     {
         Id = id;
         Nombre = nombre;
@@ -24,6 +27,7 @@ public class LicenciaModelo3D
 
     [Required(ErrorMessage = "La fecha de expiración es obligatoria")]
     public DateTime FechaExpiracion { get; set; }
+
     [Required]
     public int Modelo3DId { get; set; }
 

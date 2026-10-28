@@ -35,6 +35,7 @@ public class CompraAccesorio
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
     public MetodoPago MetodoPago { get; set; }
+    [ForeignKey(nameof(ClienteId))]
     public string ClienteId { get; set; }
     public Cliente Cliente { get; set; }
     public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
