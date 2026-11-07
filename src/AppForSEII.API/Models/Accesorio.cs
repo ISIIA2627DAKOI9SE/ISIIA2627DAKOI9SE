@@ -25,20 +25,21 @@ public class Accesorio
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100)]
-    public string Nombre { get; set; }
-    public CategoriaAccesorio CategoriaAccesorio { get; set; }
+    public string Nombre { get; set; } = string.Empty;
 
+    public CategoriaAccesorio CategoriaAccesorio { get; set; }
 
     [Required(ErrorMessage = "La compatibilidad es obligatoria")]
     [StringLength(200)]
-    public string Compatibilidad { get; set; }
+    public string Compatibilidad { get; set; } = string.Empty;
 
     [Range(0, int.MaxValue, ErrorMessage = "La cantidad disponible no puede ser negativa")]
     public int CantidadDisponible { get; set; }
 
     [Range(0.01, 100000, ErrorMessage = "El precio debe ser mayor que 0")]
     [Precision(10, 2)]
-    public decimal Precio { get; set; } 
+    public decimal Precio { get; set; }
 
     public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
+        = new List<LineaCompraAccesorio>();
 }

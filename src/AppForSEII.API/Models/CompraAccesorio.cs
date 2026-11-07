@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII.API.Models;
 
@@ -20,23 +21,34 @@ public class CompraAccesorio
         PrecioTotal = precioTotal;
         MetodoPago = metodoPago;
     }
+
     [Key]
     public int Id { get; set; }
+
     public DateTime FechaCompra { get; set; }
+
     [Required(ErrorMessage = "El nombre del cliente es obligatorio")]
-    public string NombreCliente { get; set; }
+    public string NombreCliente { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Los apellidos del cliente son obligatorios")]
-    public string ApellidosCliente { get; set; }
+    public string ApellidosCliente { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "La dirección de envío es obligatoria")]
-    public string DireccionEnvio { get; set; }
+    public string DireccionEnvio { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "El número de teléfono es obligatorio")]
-    public string NumeroTelefono { get; set; }
+    public string NumeroTelefono { get; set; } = string.Empty;
+
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
+
     public MetodoPago MetodoPago { get; set; }
+
     [ForeignKey(nameof(ClienteId))]
-    public string ClienteId { get; set; }
-    public Cliente Cliente { get; set; }
+    public string ClienteId { get; set; } = string.Empty;
+
+    public Cliente Cliente { get; set; } = null!;
+
     public IList<LineaCompraAccesorio> LineaCompraAccesorios { get; set; }
+        = new List<LineaCompraAccesorio>();
 }

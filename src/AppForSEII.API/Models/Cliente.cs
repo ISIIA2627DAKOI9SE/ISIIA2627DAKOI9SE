@@ -1,16 +1,20 @@
 namespace AppForSEII.API.Models;
-public class Cliente: ApplicationUser
+
+public class Cliente : ApplicationUser
 {
     public Cliente()
     {
     }
 
-    public Cliente(string id, string name, string surname, string userName, string direccionFacturacion): base(id, name, surname, userName)
+    public Cliente(string id, string name, string surname,
+        string userName, string direccionFacturacion)
+        : base(id, name, surname, userName)
     {
         DireccionFacturacion = direccionFacturacion;
     }
-        public string DireccionFacturacion  { get; set; }
-    
+
+    public string DireccionFacturacion { get; set; } = string.Empty;
+
     public IList<CompraAccesorio> CompraAccesorios { get; set; }
-    
+        = new List<CompraAccesorio>();
 }

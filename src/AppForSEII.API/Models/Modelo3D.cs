@@ -22,16 +22,17 @@ public class Modelo3D
     public int Id { get; set; }
 
     [Required(ErrorMessage = "El nombre del modelo 3D es obligatorio")]
-    public string Nombre { get; set; }
+    public string Nombre { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La categoría del modelo 3D es obligatoria")]
-    public string Categoria { get; set; }
+    public string Categoria { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "El formato del modelo 3D es obligatorio")]
     public FormatoModelo3D Formato { get; set; }
 
     [Precision(10, 2)]
     public decimal Precio { get; set; }
-    public IList<LicenciaModelo3D> LicenciasModelo3D { get; set; } = new List<LicenciaModelo3D>();
-    
+
+    public IList<LicenciaModelo3D> LicenciasModelo3D { get; set; }
+        = new List<LicenciaModelo3D>();
 }
