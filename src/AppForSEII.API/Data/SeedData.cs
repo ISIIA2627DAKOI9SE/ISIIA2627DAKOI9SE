@@ -226,41 +226,48 @@ namespace AppForSEII.API.Data
         public static void SeedReservasImpresora(
             ApplicationDbContext dbContext)
         {
-            if (!dbContext.ReservaImpresoras.Any())
+            if (dbContext.ReservaImpresoras.Any())
             {
-                Impresora3D? impresora =
-                    dbContext.Impresora3Ds.FirstOrDefault();
-
-                if (impresora != null)
-                {
-                    LineaReserva lineaReserva = new LineaReserva
-                    {
-                        TiempoReserva = TiempoReserva.DosHoras,
-                        PrecioSubtotal = 16.00m,
-                        Impresora3D = impresora
-                    };
-
-                    ReservaImpresora reserva =
-                        new ReservaImpresora
-                        {
-                            FechaReserva = DateTime.Now,
-                            NombreCliente = "Peter",
-                            ApellidosCliente = "Jackson",
-                            DireccionFacturacion =
-                                "Calle Ejemplo 1, Albacete",
-                            PrecioTotal = 16.00m,
-                            MetodoPago = MetodoPago.Bizum,
-                            LineasReserva =
-                                new List<LineaReserva>
-                                {
-                                    lineaReserva
-                                }
-                        };
-
-                    dbContext.ReservaImpresoras.Add(reserva);
-                    dbContext.SaveChanges();
-                }
+                return;
             }
+
+            var impresora = dbContext.Impresora3Ds
+                .FirstOrDefault(i => i.Nombre == "Prusa MK4");
+
+            var cliente = dbContext.Clientes
+                .FirstOrDefault(c => c.UserName == "peter@uclm.es");
+
+            if (impresora == null || cliente == null)
+            {
+                throw new InvalidOperationException(
+                    "Para crear la reserva de ejemplo deben existir la Prusa MK4 y el cliente Peter.");
+            }
+
+            var reserva = new ReservaImpresora(
+                0,
+                DateTime.Now,
+                cliente.Name!,
+                cliente.Surname!,
+                cliente.DireccionFacturacion,
+                16.00m,
+                MetodoPago.Bizum);
+
+            reserva.ClienteId = cliente.Id;
+            reserva.Cliente = cliente;
+
+            var lineaReserva = new LineaReserva(
+                0,
+                TiempoReserva.DosHoras,
+                16.00m);
+
+            lineaReserva.Impresora3DId = impresora.Id;
+            lineaReserva.Impresora3D = impresora;
+            lineaReserva.ReservaImpresora = reserva;
+
+            reserva.LineasReserva.Add(lineaReserva);
+
+            dbContext.ReservaImpresoras.Add(reserva);
+            dbContext.SaveChanges();
         }
 
         // ==========================================================
