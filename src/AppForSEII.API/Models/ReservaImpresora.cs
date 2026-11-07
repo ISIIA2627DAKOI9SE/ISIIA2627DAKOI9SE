@@ -30,11 +30,11 @@ public class ReservaImpresora
 
     [Required(ErrorMessage = "El nombre del cliente es obligatorio")]
     [StringLength(50)]
-    public string NombreCliente { get; set; } 
+    public string NombreCliente { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Los apellidos del cliente son obligatorios")]
     [StringLength(50)]
-    public string ApellidosCliente { get; set; } 
+    public string ApellidosCliente { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La dirección de facturación es obligatoria")]
     [StringLength(200)]
@@ -45,12 +45,11 @@ public class ReservaImpresora
     [Precision(10, 2)]
     public decimal PrecioTotal { get; set; }
 
-    
     public MetodoPago MetodoPago { get; set; }
 
     public string ClienteId { get; set; } = string.Empty;
-    public Cliente Cliente { get; set; } 
+    public Cliente Cliente { get; set; } = null!;
 
     public IList<LineaReserva> LineasReserva { get; set; }
-        
+        = new List<LineaReserva>();
 }

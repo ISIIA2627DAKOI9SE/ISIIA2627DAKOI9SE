@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 namespace AppForSEII.API.Models;
 
 [PrimaryKey(nameof(ReservaImpresoraId), nameof(Impresora3DId))]
-
 public class LineaReserva
 {
     public LineaReserva()
@@ -32,8 +31,8 @@ public class LineaReserva
     public decimal PrecioSubtotal { get; set; }
 
     public int ReservaImpresoraId { get; set; }
-    public ReservaImpresora ReservaImpresora { get; set; } 
+    public ReservaImpresora ReservaImpresora { get; set; } = null!;
 
     public int Impresora3DId { get; set; }
-    public Impresora3D Impresora3D { get; set; } 
+    public Impresora3D Impresora3D { get; set; } = null!;
 }
