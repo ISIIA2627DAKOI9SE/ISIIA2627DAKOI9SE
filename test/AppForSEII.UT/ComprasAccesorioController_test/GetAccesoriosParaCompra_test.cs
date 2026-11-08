@@ -29,7 +29,6 @@ public class ComprasAccesoriosController_test : AppForSEII4SqliteUT
         _context.Accesorios.Add(accesorio3);
 
         // Sembrar una compra existente para las pruebas de Details
-        // (solo se usan los constructores que ya tienen los modelos)
         var fechaExistente = new DateTime(2026, 10, 28, 12, 0, 0, DateTimeKind.Utc);
 
         var compraExistente = new CompraAccesorio(
