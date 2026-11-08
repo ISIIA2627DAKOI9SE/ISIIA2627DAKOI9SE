@@ -19,6 +19,7 @@ public class ComprasModelo3DController : ControllerBase
         _logger = logger;
     }
 
+    // GET SELECT: Mostrar y filtrar los modelos 3D disponibles
     [HttpGet]
     [Route("[action]")]
     [ProducesResponseType(
@@ -27,20 +28,24 @@ public class ComprasModelo3DController : ControllerBase
         string? nombre,
         string? categoria)
     {
+        // Obtener los modelos disponibles
         var modelos = _context.Modelo3Ds.AsNoTracking();
 
+        // Aplicar el filtro por nombre
         if (!string.IsNullOrWhiteSpace(nombre))
         {
             modelos = modelos.Where(m =>
                 m.Nombre.Contains(nombre));
         }
 
+        // Aplicar el filtro por categoría
         if (!string.IsNullOrWhiteSpace(categoria))
         {
             modelos = modelos.Where(m =>
                 m.Categoria == categoria);
         }
 
+        // Construir los DTO de los modelos encontrados
         var resultado = await modelos
             .OrderBy(m => m.Id)
             .Select(m => new Modelo3DForPurchaseDTO(
@@ -56,12 +61,70 @@ public class ComprasModelo3DController : ControllerBase
             ))
             .ToListAsync();
 
+        // Registrar si no existen modelos coincidentes
         if (resultado.Count == 0)
         {
             _logger.LogInformation(
                 "No se encontraron modelos 3D.");
         }
 
+        // Devolver los modelos encontrados
+        return Ok(resultado);
+    }
+
+    // GET DETAILS: Consultar los detalles de una compra realizada
+    [HttpGet]
+    [Route("[action]/{id}")]
+    [ProducesResponseType(typeof(CompraModelo3DDetailDTO), 200)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetPurchase(int id)
+    {
+        // Buscar la compra y sus modelos asociados
+        var compra = await _context.ComprasModelo3Ds
+            .AsNoTracking()
+            .Include(c => c.LineasCompraModelo)
+                .ThenInclude(l => l.Modelo3D)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        // Comprobar si la compra existe
+        if (compra == null)
+        {
+            _logger.LogInformation(
+                "No se encontró la compra de modelos 3D con Id {Id}",
+                id);
+
+            return NotFound();
+        }
+
+        // Construir los detalles de los modelos comprados
+        var lineas = compra.LineasCompraModelo
+            .OrderBy(l => l.Modelo3D.Id)
+            .Select(l => new LineaCompraModeloDetailDTO(
+                l.Modelo3D.Id,
+                l.Modelo3D.Nombre,
+                l.Modelo3D.Categoria,
+                l.Modelo3D.Formato,
+                l.CantidadLicencias,
+                l.PrecioUnidad,
+                l.Subtotal
+            ))
+            .ToList();
+
+        // Construir el DTO con los datos de la compra
+        var resultado = new CompraModelo3DDetailDTO(
+            compra.Id,
+            compra.FechaCompra,
+            compra.NombreCliente,
+            compra.ApellidosCliente,
+            compra.CorreoElectronico,
+            compra.DireccionFacturacion,
+            compra.Descripcion,
+            compra.PrecioTotal,
+            compra.MetodoPago,
+            lineas
+        );
+
+        // Devolver los detalles de la compra
         return Ok(resultado);
     }
 }
