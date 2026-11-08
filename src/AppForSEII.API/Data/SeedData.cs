@@ -243,13 +243,19 @@ namespace AppForSEII.API.Data
                     "Para crear la reserva de ejemplo deben existir la Prusa MK4 y el cliente Peter.");
             }
 
+            // Misma fórmula del POST para una reserva de dos horas.
+            decimal importe = decimal.Round(
+                impresora.PrecioReserva + impresora.PrecioKilovatioHora * 2,
+                2,
+                MidpointRounding.AwayFromZero);
+
             var reserva = new ReservaImpresora(
                 0,
                 DateTime.Now,
                 cliente.Name!,
                 cliente.Surname!,
                 cliente.DireccionFacturacion,
-                16.00m,
+                importe,
                 MetodoPago.Bizum);
 
             reserva.ClienteId = cliente.Id;
@@ -258,7 +264,7 @@ namespace AppForSEII.API.Data
             var lineaReserva = new LineaReserva(
                 0,
                 TiempoReserva.DosHoras,
-                16.00m);
+                importe);
 
             lineaReserva.Impresora3DId = impresora.Id;
             lineaReserva.Impresora3D = impresora;
