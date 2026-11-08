@@ -18,7 +18,7 @@ public class AccesoriosController : ControllerBase
     [HttpGet]
     [Route("[action]")]
     [ProducesResponseType(typeof(IList<AccesorioParaCompraDTO>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IList<AccesorioParaCompraDTO>>> GetAccesoriosForPurchase(string? nombre, CategoriaAccesorio? categoria)
+    public async Task<ActionResult<IList<AccesorioParaCompraDTO>>> GetAccesoriosParaCompra(string? nombre, CategoriaAccesorio? categoria)
     {
         var query = _context.Accesorios.AsQueryable();
 
