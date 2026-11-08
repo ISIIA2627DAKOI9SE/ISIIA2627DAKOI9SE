@@ -17,7 +17,6 @@ public class AccesoriosController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    [Route("Select")]
     [ProducesResponseType(typeof(IList<AccesorioParaCompraDTO>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<IList<AccesorioParaCompraDTO>>> GetAccesoriosForPurchase(string? nombre, CategoriaAccesorio? categoria)
     {
