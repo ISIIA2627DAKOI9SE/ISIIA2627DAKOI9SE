@@ -59,6 +59,7 @@ builder.Services.AddSwaggerGen(options => {
         License = new OpenApiLicense { Name = "MIT License", Url = new Uri("https://opensource.org/license/mit/") },
         Contact = new OpenApiContact { Name = "Software Engineering II Team", Email = "isii@on.uclm.es" },
     });
+    
     //this assign operation names, as the actual names they have
     options.CustomOperationIds(apiDescription => {
         return apiDescription.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null;
