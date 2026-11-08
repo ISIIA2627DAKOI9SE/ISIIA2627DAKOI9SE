@@ -65,7 +65,13 @@ builder.Services.AddSwaggerGen(options => {
         return apiDescription.TryGetMethodInfo(out MethodInfo methodInfo) ? methodInfo.Name : null;
     });
 
+    options.AddServer(new OpenApiServer
+{
+    Url = "/"
 });
+
+});
+
 
 
 var app = builder.Build();
