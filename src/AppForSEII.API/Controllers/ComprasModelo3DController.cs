@@ -131,6 +131,10 @@ public class ComprasModelo3DController : ControllerBase
             return BadRequest(
                 "Debe introducir los datos de la compra.");
         }
+        if (compraDTO.NombreCliente.Equals("Cliente"))
+        {
+            return BadRequest("¡Error!"+ compraDTO.NombreCliente + " no es un nombre válido");
+        }
 
         // Validar los datos obligatorios.
         if (string.IsNullOrWhiteSpace(compraDTO.NombreCliente) ||
