@@ -230,4 +230,20 @@ public class ComprasModelo3DCreatePurchaseController_test
         Assert.IsType<BadRequestObjectResult>(result);
         Assert.Empty(_context.ComprasModelo3Ds);
     }
+    [Fact]
+    public async Task CreatePurchase_NombreNoValido_DevuelveBadRequest()
+    {
+        //Arrange 
+        var compraDTO = CreateValidDTO();
+        compraDTO.NombreCliente = "Cliente";
+
+        //Act
+        var result = await _controller.CreatePurchase(compraDTO);
+
+        //Assert
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("¡Error!"+ compraDTO.NombreCliente + " no es un nombre válido",badRequest.Value);
+        Assert.Empty(_context.ComprasModelo3Ds);
+
+    }
 }
