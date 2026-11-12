@@ -383,4 +383,33 @@ public class ComprasAccesoriosController_test : AppForSEII4SqliteUT
         var error = Assert.IsType<SerializableError>(badRequestResult.Value);
         Assert.True(error.ContainsKey("Cantidad"));
     }
+
+    //Variacion examen sprint 2
+    [Theory]
+    [InlineData("Apartado de Correos 123")]
+    [InlineData("Apartado, Albacete")]
+    public async Task CreateCompraAccesorio_ContieneApartado_ReturnBadRequest(string direccionEnvio)
+    {
+        //Arrange
+        var lineas = new List<LineaCompraAccesorioDTO>();
+        lineas.Add(new LineaCompraAccesorioDTO(1,1));
+        var dto = new CompraAccesorioParaCrearDTO(
+            "cliente-1",
+            "Carlos",
+            "Sánchez",
+            direccionEnvio,
+            "600123456",
+            MetodoPago.TarjetaCredito,
+            lineas
+        );
+
+        // Act 
+        var result = await _controller.CreateCompraAccesorio(dto);
+
+        //Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+        var error = Assert.IsType<SerializableError>(badRequestResult.Value);
+        var mensajes = Assert.IsType<string[]>(error["DireccionEnvio"]);
+        Assert.Equal("¡Error! No se realizan envíos a apartados de correos", mensajes[0]);
+    }
 }
