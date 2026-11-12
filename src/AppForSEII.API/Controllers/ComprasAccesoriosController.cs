@@ -31,6 +31,13 @@ public class ComprasAccesoriosController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        //Variación examen sprint 2: No contener la palabra Apartado
+        if (compraParaCrearDTO.DireccionEnvio.Contains("Apartado"))
+        {
+            ModelState.AddModelError("DireccionEnvio", "¡Error! No se realizan envíos a apartados de correos");
+            return BadRequest(ModelState);
+        }
+
         // Flujo alternativo 4: el carrito no puede estar vacío
         if (compraParaCrearDTO.LineasCompraAccesorio == null || compraParaCrearDTO.LineasCompraAccesorio.Count == 0)
         {
